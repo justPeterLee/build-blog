@@ -1,20 +1,12 @@
 "use client";
-import { cn, currentPathname, navbarSelectionAnmtion } from "@/lib/utils";
-import { Url } from "next/dist/shared/lib/router/router";
+import { currentPathname, navbarSelectionAnmtion } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { animated, useSpring } from "@react-spring/web";
 
 export default function NavLinkContainer() {
   const pathname = usePathname();
-  const [path, setPath] = useState(currentPathname(pathname));
-
-  useEffect(() => {
-    setPath(currentPathname(pathname));
-  }, [pathname]);
-
-  const initRender = useRef(false);
   const parentRef = useRef<HTMLDivElement | null>(null);
 
   const [springs, api] = useSpring(() => ({
@@ -36,10 +28,7 @@ export default function NavLinkContainer() {
       if (!initial) {
         api.start(newPos);
       } else {
-        if (!initRender.current) {
-          initRender.current = true;
-          api.set(newPos);
-        }
+        api.set(newPos);
       }
     }
   };
@@ -60,36 +49,16 @@ export default function NavLinkContainer() {
         }
         style={springs}
       />
-      <NavLink
-        href={"/"}
-        path="home"
-        currentPath={path}
-        click={handleSelectAnimation}
-      >
+      <NavLink href={"/"} path="home" click={handleSelectAnimation}>
         Home
       </NavLink>
-      <NavLink
-        href={"/articles"}
-        path="articles"
-        currentPath={path}
-        click={handleSelectAnimation}
-      >
+      <NavLink href={"/articles"} path="articles" click={handleSelectAnimation}>
         Articles
       </NavLink>
-      <NavLink
-        href={"/projects"}
-        path="projects"
-        currentPath={path}
-        click={handleSelectAnimation}
-      >
+      <NavLink href={"/projects"} path="projects" click={handleSelectAnimation}>
         Projects
       </NavLink>
-      <NavLink
-        href={"/practice"}
-        path="practice"
-        currentPath={path}
-        click={handleSelectAnimation}
-      >
+      <NavLink href={"/practice"} path="practice" click={handleSelectAnimation}>
         Practice
       </NavLink>
     </div>
@@ -100,13 +69,11 @@ function NavLink({
   children,
   href,
   path,
-  currentPath,
   click,
 }: {
   children: ReactNode;
-  href: Url;
+  href: string;
   path: string;
-  currentPath: string;
   click: (id: string) => void;
 }) {
   return (
@@ -116,9 +83,7 @@ function NavLink({
       }}
       href={href}
       id={path}
-      className={cn(
-        "duration-150 rounded-md p-1 px-3 text-navbar-link-text hover:text-navbar-link-text-active z-20"
-      )}
+      className="duration-150 rounded-md p-1 px-3 text-navbar-link-text hover:text-navbar-link-text-active z-20"
     >
       {children}
     </Link>
