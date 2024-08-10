@@ -20,6 +20,8 @@ const config: Config = {
         "navbar-active": "rgba(var(--navbar-active))",
         "navbar-cta": "rgba(var(--navbar-cta))",
         "navbar-mode-btn": "rgba(var(--navbar-mode-btn))",
+        "navbar-link-text": "rgba(var(--navbar-link-text))",
+        "navbar-link-text-active": "rgba(var(--navbar-link-text-active))",
 
         card: "rgba(var(--card))",
 

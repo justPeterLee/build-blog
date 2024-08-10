@@ -19,6 +19,8 @@
   --navbar-active: 229, 229, 229;
   --navbar-cta: 250 250 250;
   --navbar-mode-btn: 250 250 250;
+  --navbar-link-text: 115 115 115;
+  --navbar-link-text-active: 0 0 0;
 
   --card: 255, 255, 255;
 
@@ -37,6 +39,8 @@
   --navbar-active: 40, 40, 40;
   --navbar-cta: 100, 100, 100;
   --navbar-mode-btn: 20, 20, 20;
+  --navbar-link-text: 115 115 115;
+  --navbar-link-text-active: 200 200 200;
 
   --card: 255, 255, 255;
 
