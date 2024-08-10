@@ -2,32 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  @apply transition-colors duration-200;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+.light {
+  --background: 220, 220, 220;
+
+  --navbar: 255, 255, 255;
+  --navbar-active: 229, 229, 229;
+  --navbar-cta: 250 250 250;
+
+  --card: 255, 255, 255;
+
+  --cta: 229, 229, 229;
+  --cta-active: 212, 212, 212;
+  --cta-text: 38, 38, 38;
+
+  --primary-text: 38, 38, 38;
+  --secondary-text: 115, 115, 115;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
+.dark {
+  --background: 35, 35, 35;
+
+  --navbar: 25, 25, 25;
+  --navbar-active: 40, 40, 40;
+  --navbar-cta: 100, 100, 100;
+
+  --card: 255, 255, 255;
+
+  --cta: 55, 55, 55;
+  --cta-active: 65, 65, 65;
+  --cta-text: 222, 222, 222;
+
+  --primary-text: 222, 222, 222;
+  --secondary-text: 255, 255, 255;
+}
+/* body {
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
+} */
