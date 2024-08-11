@@ -52,8 +52,8 @@ export default function NavLinkContainer() {
       <NavLink href={"/"} path="home" click={handleSelectAnimation}>
         Home
       </NavLink>
-      <NavLink href={"/articles"} path="articles" click={handleSelectAnimation}>
-        Articles
+      <NavLink href={"/posts"} path="posts" click={handleSelectAnimation}>
+        Posts
       </NavLink>
       <NavLink href={"/projects"} path="projects" click={handleSelectAnimation}>
         Projects

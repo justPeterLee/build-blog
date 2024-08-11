@@ -22,14 +22,17 @@
   --navbar-link-text: 115 115 115;
   --navbar-link-text-active: 0 0 0;
 
-  --card: 255, 255, 255;
+  --card: 245 245 245;
+  --code-card: 230 230 230;
+  --tag-card: 200 200 200;
 
   --cta: 229, 229, 229;
   --cta-active: 212, 212, 212;
   --cta-text: 38, 38, 38;
 
   --primary-text: 38, 38, 38;
-  --secondary-text: 115, 115, 115;
+  --secondary-text: 100, 100, 100;
+  --tertiary-text: 160, 160, 160;
 }
 
 .dark {
@@ -42,14 +45,17 @@
   --navbar-link-text: 115 115 115;
   --navbar-link-text-active: 200 200 200;
 
-  --card: 255, 255, 255;
+  --card: 40 40 40;
+  --code-card: 50, 50, 50;
+  --tag-card: 60, 60, 60;
 
   --cta: 55, 55, 55;
   --cta-active: 65, 65, 65;
   --cta-text: 222, 222, 222;
 
   --primary-text: 222, 222, 222;
-  --secondary-text: 255, 255, 255;
+  --secondary-text: 150, 150, 150;
+  --tertiary-text: 100, 100, 100;
 }
 /* body {
   background: linear-gradient(

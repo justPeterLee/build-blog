@@ -24,13 +24,16 @@ const config: Config = {
         "navbar-link-text-active": "rgba(var(--navbar-link-text-active))",
 
         card: "rgba(var(--card))",
+        "code-card": "rgba(var(--code-card))",
+        "tag-card": "rgba(var(--tag-card))",
 
         cta: "rgba(var(--cta))",
         "cta-active": "rgba(var(--cta-active))",
         "cta-text": "rgba(var(--cta-text))",
 
         "primary-text": "rgba(var(--primary-text))",
-        "secondary-text": "rbga(var(--secondary-text))",
+        "secondary-text": "rgba(var(--secondary-text))",
+        "tertiary-text": "rgba(var(--tertiary-text))",
       },
     },
   },

@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { RiMoonClearFill } from "react-icons/ri";
+import { TbSunFilled } from "react-icons/tb";
 
 export default function NavThemeButton() {
   const [darkMode, setDarkMode] = useState<boolean | null>(null);
@@ -38,21 +40,9 @@ export default function NavThemeButton() {
       }}
     >
       {darkMode ? (
-        <Image
-          src={"/navbar/dark-mode-white.svg"}
-          alt="light"
-          width={20}
-          height={20}
-          className="pointer-events-none"
-        />
+        <RiMoonClearFill size={20} color="white" />
       ) : (
-        <Image
-          src={"/navbar/light-mode-fill.svg"}
-          alt="light"
-          width={20}
-          height={20}
-          className="pointer-events-none"
-        />
+        <TbSunFilled size={21} color="black" />
       )}
     </div>
   );
