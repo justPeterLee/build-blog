@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { RiMoonClearFill } from "react-icons/ri";
 import { TbSunFilled } from "react-icons/tb";
 
