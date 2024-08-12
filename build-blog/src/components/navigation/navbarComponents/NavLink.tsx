@@ -40,6 +40,16 @@ export default function NavLinkContainer() {
     }
   }, []);
 
+  useEffect(() => {
+    if (parentRef.current) {
+      const path = currentPathname(pathname);
+
+      const validAnimeLink = parentRef.current.querySelector(`#${path}`);
+      if (validAnimeLink === null) {
+        api.set({ scaleX: 0, scaleY: 0 });
+      }
+    }
+  }, [pathname]);
   return (
     <div className="navbar_links flex gap-1 relative" ref={parentRef}>
       <animated.div

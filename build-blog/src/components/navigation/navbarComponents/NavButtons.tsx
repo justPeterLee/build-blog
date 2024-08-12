@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { RiMoonClearFill } from "react-icons/ri";
 import { TbSunFilled } from "react-icons/tb";
+import { FaHammer } from "react-icons/fa";
+import Link from "next/link";
 
 export default function NavThemeButton() {
   const [darkMode, setDarkMode] = useState<boolean | null>(null);
@@ -44,5 +46,16 @@ export default function NavThemeButton() {
         <TbSunFilled size={21} color="black" />
       )}
     </div>
+  );
+}
+
+export function NavBuildButton() {
+  return (
+    <Link
+      href="/build"
+      className="nav-theme-btn shadow-[0px_1px_2px_0px_rgba(60,64,67,0.3),0px_1px_3px_1px_rgba(60,64,67,0.15)] rounded-full bg-navbar-cta flex items-center justify-center h-[32px] w-[32px] hover:cursor-pointer select-none"
+    >
+      <FaHammer size={16} className="text-primary-text duration-0" />
+    </Link>
   );
 }

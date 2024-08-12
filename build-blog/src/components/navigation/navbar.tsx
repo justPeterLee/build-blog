@@ -1,6 +1,6 @@
 import { CgSearch } from "react-icons/cg";
 import NavLinkContainer from "./navbarComponents/NavLink";
-import NavThemeButton from "./navbarComponents/NavButtons";
+import NavThemeButton, { NavBuildButton } from "./navbarComponents/NavButtons";
 
 export function Navbar() {
   return (
@@ -17,6 +17,7 @@ export function Navbar() {
               <p className="text-secondary-text">crtl+k</p>
             </span>
           </button>
+          <NavBuildButton />
           <NavThemeButton />
         </div>
       </nav>
