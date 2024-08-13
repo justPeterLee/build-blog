@@ -18,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={"light bg-background"}>
+        <div id={"__modal"}></div>
         <Navbar />
         {children}
       </body>
