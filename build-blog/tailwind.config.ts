@@ -29,7 +29,8 @@ const config: Config = {
 
         cta: "rgba(var(--cta))",
         "cta-active": "rgba(var(--cta-active))",
-        "cta-text": "rgba(var(--cta-text))",
+        "cta-card": "rgba(var(--cta-card))",
+        "cta-active-card": "rgba(var(--cta-active-card))",
 
         "primary-text": "rgba(var(--primary-text))",
         "secondary-text": "rgba(var(--secondary-text))",

@@ -27,8 +27,10 @@
   --tag-card: 200 200 200;
 
   --cta: 200, 200, 200;
-  --cta-active: 190, 190, 190;
-  --cta-text: 38, 38, 38;
+  --cta-active: 200, 200, 200;
+
+  --cta-card: 220 220 220;
+  --cta-active-card: 200 200 200;
 
   --primary-text: 38, 38, 38;
   --secondary-text: 100, 100, 100;
@@ -51,7 +53,8 @@
 
   --cta: 55, 55, 55;
   --cta-active: 65, 65, 65;
-  --cta-text: 222, 222, 222;
+  --cta-card: 55, 55, 55;
+  --cta-active-card: 65, 65, 65;
 
   --primary-text: 222, 222, 222;
   --secondary-text: 150, 150, 150;
