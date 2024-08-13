@@ -35,3 +35,13 @@ export function navbarSelectionAnmtion(
 
   return { x, scaleX, scaleY };
 }
+
+export function fileSize(size: number) {
+  const MB = parseFloat((size / (1024 * 1024)).toFixed(2));
+  const KB = parseFloat((size / 1024).toFixed(2));
+
+  if (MB >= 1) {
+    return `${MB}MB`;
+  }
+  return `${KB}KB`;
+}
