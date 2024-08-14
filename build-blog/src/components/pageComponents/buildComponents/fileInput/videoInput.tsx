@@ -1,14 +1,15 @@
 "use client";
 
 import { Modal } from "@/components/modal/modalTemplate";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { BiMoviePlay } from "react-icons/bi";
 import { FileList } from "../build";
-import axios from "axios";
+import { validVideo } from "@/lib/utils";
 export function VideoInput({}: {}) {
   const dropZone = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | string | undefined>(undefined);
+  const [error, setError] = useState({ error: false, message: "" });
 
   useEffect(() => {
     window.addEventListener("dragover", (event) => {
@@ -20,6 +21,42 @@ export function VideoInput({}: {}) {
     });
   }, []);
   const [showURLModal, setShowURLModal] = useState(false);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const files = e.target.files;
+    if (files) {
+      const isValid = validVideo(files[0]);
+      if (!isValid.error) {
+        if (files.length > 0) {
+          setFile(files[0]);
+          setError({ error: false, message: "" });
+        }
+      } else {
+        console.log(isValid.message);
+        setError({ error: true, message: isValid.message });
+      }
+    }
+  };
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      if (inputRef.current) {
+        const isValid = validVideo(files[0]);
+        if (!isValid.error) {
+          inputRef.current.files = files;
+          setFile(files[0]);
+          setError({ error: false, message: "" });
+        } else {
+          console.log(isValid.message);
+          setError({ error: true, message: isValid.message });
+        }
+      }
+    }
+  };
 
   if (file) {
     return (
@@ -40,17 +77,7 @@ export function VideoInput({}: {}) {
         e.dataTransfer.dropEffect = "copy";
       }}
       onDrop={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("test");
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          if (inputRef.current) {
-            console.log("set");
-            inputRef.current.files = files;
-            setFile(files[0]);
-          }
-        }
+        handleFileDrop(e);
       }}
       ref={dropZone}
       className="bg-card rounded-3xl flex justify-center items-center shadow p-5"
@@ -65,7 +92,7 @@ export function VideoInput({}: {}) {
           }}
         />
       )}
-      <div className="min-w-80 min-h-80  max-w-[42rem] w-fit h-fit p-10 border-dashed border-cta border-[2px] rounded-2xl flex flex-col justify-center items-center ">
+      <div className="relative text-center min-w-80 min-h-80  max-w-[42rem] w-fit h-fit p-10 border-dashed border-cta border-[2px] rounded-2xl flex flex-col justify-center items-center ">
         <BiMoviePlay
           className="text-secondary-text duration-0 mb-4"
           size={30}
@@ -74,7 +101,7 @@ export function VideoInput({}: {}) {
         <div className="text-secondary-text duration-0 text-center mb-4">
           <p>Choose file or drag and drop here</p>
           <p className="text-sm text-tertiary-text">
-            MP4 and MOV formats up to 50MB
+            MP4 and MOV formats up to 10MB
           </p>
         </div>
         <label htmlFor="video-upload" className="hover:cursor-pointer">
@@ -84,16 +111,12 @@ export function VideoInput({}: {}) {
         </label>
         <input
           ref={inputRef}
+          accept=".mp4, .mov"
           id="video-upload"
           type="file"
           className="hidden"
           onChange={(e) => {
-            console.log("change");
-            if (e.target.files) {
-              if (e.target.files.length > 0) {
-                setFile(e.target.files[0]);
-              }
-            }
+            handleFileChange(e);
           }}
         />
 
@@ -108,6 +131,11 @@ export function VideoInput({}: {}) {
             From URL
           </button>
         </div>
+        {error.error && (
+          <p className="text-[#BF4153] absolute bottom-5 z-20 text-sm max-w-[80%]">
+            * {error.message}
+          </p>
+        )}
       </div>
     </div>
   );

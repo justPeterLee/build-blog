@@ -1,12 +1,14 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, validImage } from "@/lib/utils";
 import { FileList } from "../build";
+
 export function ImageInput() {
   const dropZone = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | undefined>(undefined);
+  const [error, setError] = useState({ error: false, message: "" });
 
   useEffect(() => {
     window.addEventListener("dragover", (event) => {
@@ -17,6 +19,42 @@ export function ImageInput() {
       event.preventDefault();
     });
   }, []);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const files = e.target.files;
+    if (files) {
+      const isValid = validImage(files[0]);
+      if (!isValid.error) {
+        if (files.length > 0) {
+          setFile(files[0]);
+          setError({ error: false, message: "" });
+        }
+      } else {
+        console.log(isValid.message);
+        setError({ error: true, message: isValid.message });
+      }
+    }
+  };
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      if (inputRef.current) {
+        const isValid = validImage(files[0]);
+        if (!isValid.error) {
+          inputRef.current.files = files;
+          setFile(files[0]);
+          setError({ error: false, message: "" });
+        } else {
+          console.log(isValid.message);
+          setError({ error: true, message: isValid.message });
+        }
+      }
+    }
+  };
 
   if (file) {
     return (
@@ -37,21 +75,12 @@ export function ImageInput() {
         e.dataTransfer.dropEffect = "copy";
       }}
       onDrop={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("test");
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          if (inputRef.current) {
-            inputRef.current.files = files;
-            setFile(files[0]);
-          }
-        }
+        handleFileDrop(e);
       }}
       ref={dropZone}
       className="bg-card rounded-3xl flex justify-center items-center shadow p-5"
     >
-      <div className="min-w-80 min-h-80  max-w-[42rem] w-fit h-fit p-10 border-dashed border-cta border-[2px] rounded-2xl flex flex-col justify-center items-center gap-4">
+      <div className="relative  text-center min-w-80 min-h-80  max-w-[42rem] w-fit h-fit p-10 border-dashed border-cta border-[2px] rounded-2xl flex flex-col justify-center items-center gap-4">
         <IoCloudUploadOutline
           className="text-secondary-text duration-0"
           size={30}
@@ -59,7 +88,7 @@ export function ImageInput() {
         <div className="text-secondary-text duration-0 text-center">
           <p>Choose file or drag and drop here</p>
           <p className="text-sm text-tertiary-text">
-            JPEG and PNG formats up to 50MB{" "}
+            JPG, JPEG, PNG, and GIF formats up to 5MB{" "}
           </p>
         </div>
 
@@ -72,16 +101,17 @@ export function ImageInput() {
           ref={inputRef}
           id="image-upload"
           type="file"
+          accept=".png, .jpg, .jpeg, .gif"
           className="hidden"
           onChange={(e) => {
-            console.log("change");
-            if (e.target.files) {
-              if (e.target.files.length > 0) {
-                setFile(e.target.files[0]);
-              }
-            }
+            handleFileChange(e);
           }}
         />
+        {error.error && (
+          <p className="text-[#BF4153] absolute bottom-10 z-20 text-sm max-w-[80%]">
+            * {error.message}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -55,3 +55,41 @@ export function fileType(type: string) {
     return null;
   }
 }
+
+export function validImage(file: File) {
+  const error = { error: false, message: "valid" };
+  // valid type
+  const allowedTypes = ["image/png", "image/jpeg", "image/gif"];
+  if (!allowedTypes.includes(file.type)) {
+    error.error = true;
+    error.message =
+      "File type is not supported. Please upload a supported image type.";
+    return error;
+  }
+  // valid size
+  if (file.size > 5 * 1024 * 1024) {
+    error.error = true;
+    error.message = "File size exceeds the limit of 5 MB";
+  }
+
+  return error;
+}
+
+export function validVideo(file: File) {
+  const error = { error: false, message: "valid" };
+  // valid type
+  const allowedTypes = ["video/mp4", "video/mov"];
+  if (!allowedTypes.includes(file.type)) {
+    error.error = true;
+    error.message =
+      "File type is not supported. Please upload a supported type.";
+    return error;
+  }
+  // valid size
+  if (file.size > 10 * 1024 * 1024) {
+    error.error = true;
+    error.message = "File size exceeds the limit of 5 MB";
+  }
+
+  return error;
+}
