@@ -45,3 +45,13 @@ export function fileSize(size: number) {
   }
   return `${KB}KB`;
 }
+
+export function fileType(type: string) {
+  if (type.startsWith("image/") || type.startsWith("/gif")) {
+    return "Image";
+  } else if (type.startsWith("video/")) {
+    return "Video";
+  } else {
+    return null;
+  }
+}
