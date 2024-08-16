@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { BiMoviePlay } from "react-icons/bi";
 import { FileList } from "../build";
 import { validVideo } from "@/lib/utils";
+import axios from "axios";
 export function VideoInput({}: {}) {
   const dropZone = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -213,9 +214,7 @@ export function VideoPlayer({
             <source src={URL.createObjectURL(file)} type={file.type}></source>
           </video>
         </div>
-        <button className="text-secondary-text bg-cta-card hover:bg-cta-active-card rounded-lg p-2">
-          upload
-        </button>
+        <UploadFile file={file} />
       </div>
     );
   }
@@ -252,5 +251,34 @@ export function EmbbedVideoPreview({
         </button>
       </div>
     </div>
+  );
+}
+
+function UploadFile({ file }: { file: File }) {
+  const handleUpload = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      await axios.post(
+        "/api/file/upload",
+        { file, url: "example" },
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  return (
+    <button
+      onClick={() => {
+        handleUpload();
+      }}
+      className="mr-4 text-secondary-text bg-cta-card hover:bg-cta-active-card rounded-lg p-2"
+    >
+      upload
+    </button>
   );
 }

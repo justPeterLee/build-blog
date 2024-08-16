@@ -93,3 +93,9 @@ export function validVideo(file: File) {
 
   return error;
 }
+
+export function fileRefFormat(url: string, file: File) {
+  const type = file.type.split("/")[1];
+  const name = file.name.replace(/\s/g, "-");
+  return `${url}/${type}/${name}`;
+}
