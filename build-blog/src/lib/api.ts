@@ -14,7 +14,7 @@ export function getPostById(post: string, onlyMeta?: boolean) {
   try {
     const postData = readPost(post);
     const { data, content } = matter(postData) as unknown as {
-      data: { title: string; date: Date; tags: string[] };
+      data: PostFileMeta;
       content: string;
     };
 
@@ -47,19 +47,10 @@ function readPost(postFile: string) {
 export function getPostCards() {
   const allPostFiles = getPosts();
 
-  const allPostMeta: {
-    title: string;
-    date: string;
-    tags: string[];
-    fileName: string;
-  }[] = [];
+  const allPostMeta: PostMetaData[] = [];
 
   for (let i = 0; i < allPostFiles.length; i++) {
-    const postData = getPostById(allPostFiles[i], true) as null | {
-      title: string;
-      date: string;
-      tags: string[];
-    };
+    const postData = getPostById(allPostFiles[i], true) as null | PostMetaData;
     if (postData) {
       const finalData = {
         ...postData,
