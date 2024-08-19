@@ -14,7 +14,7 @@ In this blog post, I will be talking about my overall experience with Apple's Ai
 
 <!-- <BlogCode language="jsx" file="components/code.tsx"> -->
 
-```js
+```tsx
 export default function BlogCode({
   children,
   language,
@@ -23,9 +23,9 @@ export default function BlogCode({
   language: string;
 }) {
   return (
-    &lt;SyntaxHighlighter language={language} style={darcula}>
+    <SyntaxHighlighter language={language} style={darcula}>
       {children}
-    &lt;/SyntaxHighlighter>
+    </SyntaxHighlighter>
   );
 }
 ```
