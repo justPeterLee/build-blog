@@ -4,18 +4,17 @@ import { fileSize } from "@/lib/utils";
 import { ImageInput } from "./fileInput/imageInput";
 import { TiDelete } from "react-icons/ti";
 import { VideoInput } from "./fileInput/videoInput";
-import { User } from "firebase/auth";
-import { logout } from "@/lib/db";
-import { Login } from "./auth/auth";
 import { useState } from "react";
-import axios from "axios";
-export function FileInput() {
-  const [user, setUser] = useState<User | null>(null);
+import { CodeInput } from "./code/CodeSnippet";
+import Markdown from "markdown-to-jsx";
+import Image from "next/image";
 
+export function FileInput({ post }: { post: string | null }) {
+  // console.log(join(process.cwd(), "_posts"));
   return (
     <>
-      <Login />
-      <FetchFile />
+      {/* <Login />
+      <FetchFile /> */}
       {/* <button
         onClick={async () => {
           await logout();
@@ -25,7 +24,10 @@ export function FileInput() {
       </button>
       {user ? <p>welcome, {user.email}</p> : <p>log in</p>} */}
       {/* <ImageInput /> */}
-      <VideoInput />
+      {/* <VideoInput /> */}
+      <Image src="/blog/example/tony.jpg" alt="" height={100} width={100} />
+      <CodeInput />
+      {/* {post && <Markdown options={{}}>{post}</Markdown>} */}
     </>
   );
 }
@@ -64,11 +66,11 @@ export function FetchFile() {
   const [file, setFile] = useState(null);
   const handleFetch = async () => {
     try {
-      const url = await axios.get("/api/file/asdf");
-      if (url.data) {
-        console.log(url.data.url);
-        setFile(url.data.url);
-      }
+      // const url = await axios.get("/api/file/asdf");
+      // if (url.data) {
+      //   console.log(url.data.url);
+      //   setFile(url.data.url);
+      // }
     } catch (err) {
       console.log("could not fetch file ", err);
     }
