@@ -1,4 +1,6 @@
+"use client";
 import { BlogCard } from "@/components/blog/Blog";
+import { useState } from "react";
 import { CgSearch } from "react-icons/cg";
 import { FaPlus } from "react-icons/fa6";
 
@@ -30,24 +32,33 @@ export function PostsIntro() {
   );
 }
 
-export function PostsSearch() {
+export function PostsSearch({
+  defaultPosts,
+}: {
+  defaultPosts: {
+    title: string;
+    date: string;
+    tags: string[];
+    fileName: string;
+  }[];
+}) {
+  const [searchPost, setSearchPost] = useState(defaultPosts);
   return (
     <section className="w-full">
       <h1 className="text-primary-text mb-1">All Posts</h1>
 
       <div className="flex flex-col gap-2 justify-center bg-card p-4 rounded-md shadow">
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
+        {searchPost.map((postCard) => {
+          return (
+            <BlogCard
+              key={Math.random()}
+              title={postCard.title}
+              date={postCard.date}
+              tags={postCard.tags}
+              fileName={postCard.fileName}
+            />
+          );
+        })}
       </div>
     </section>
   );
