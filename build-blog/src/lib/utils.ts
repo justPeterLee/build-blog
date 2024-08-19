@@ -99,3 +99,12 @@ export function fileRefFormat(url: string, file: File) {
   const name = file.name.replace(/\s/g, "-");
   return `${url}/${type}/${name}`;
 }
+
+export function markDownJsFormat(value: string) {
+  const json = JSON.parse(value);
+
+  const string = JSON.stringify(["name", "test"]);
+  console.log(string);
+
+  return json;
+}
