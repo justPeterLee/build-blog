@@ -2,7 +2,7 @@
 
 ### Earphones have come a long way. It's about time we forget about the headphone jack.
 
-### August 19, 2024
+#### August 19, 2024
 
 I have to admit that I was a bit late to join the bluetooth headphones party. I got my WH-1000XM3s only last year. It was my first pair of bluetooth headphones. About after a week with the WH-1000XM3s, I stopped carrying wired earpods. Noise cancelling was great for morning commutes in London. Battery life was so good that I never had to care about it. Returning back to wired headphones was not an option for me anymore.
 
