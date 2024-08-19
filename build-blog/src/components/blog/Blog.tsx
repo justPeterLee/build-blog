@@ -1,77 +1,46 @@
-import { ReactNode, createElement } from "react";
+import Link from "next/link";
 
-export function BlogCard() {
+export function BlogCard({
+  title,
+  date,
+  tags,
+  fileName,
+}: {
+  title: string;
+  date: string;
+  tags: string[];
+  fileName: string;
+}) {
   return (
-    <div className="bg-code-card py-2 px-4 rounded-md flex justify-between">
+    <Link
+      href={`/posts/${fileName}`}
+      className="bg-code-card py-2 px-4 rounded-md flex justify-between"
+    >
       <div className="flex-grow">
         <span>
-          <p className="text-tertiary-text text-xs font-semibold">
-            10TH AUG 2024
-          </p>
+          <p className="text-tertiary-text text-xs font-semibold">{date}</p>
         </span>
 
         <span className="flex gap-1">
-          <p className="text-primary-text"># Blog Title Test</p>
+          <p className="text-primary-text"># {title}</p>
         </span>
       </div>
 
       <span className="flex gap-4 items-center">
         <div className="flex items-center gap-2">
-          <Tag>react</Tag>
-          <Tag>javascript</Tag>
+          {tags.map((tag) => (
+            <Tag tag={tag} key={Math.random()} />
+          ))}
         </div>
       </span>
-    </div>
+    </Link>
   );
 }
 
-export function Tag({ children }: { children: ReactNode }) {
+export function Tag({ tag }: { tag: string }) {
   return (
     <span className="px-2 text-secondary-text text-sm bg-tag-card rounded">
-      {children}
+      {tag}
     </span>
-  );
-}
-
-export function RecreateBlogCard() {
-  return createElement(
-    "div",
-    { className: "bg-code-card py-2 px-4 rounded-md flex justify-between" },
-    createElement(
-      "div",
-      { className: "flex-grow" },
-
-      createElement(
-        "span",
-        null,
-        createElement(
-          "p",
-          {
-            className: "text-tertiary-text text-xs font-semibold",
-          },
-          "10TH AUGUST 2024"
-        )
-      ),
-
-      createElement(
-        "span",
-        { className: "flex gap-1" },
-        createElement(
-          "p",
-          { className: "text-primary-text" },
-          "# Blog Title Test"
-        )
-      )
-    ),
-    createElement(
-      "span",
-      { className: "flex gap-4 items-center" },
-      createElement(
-        "div",
-        { className: "flex items-center gap-2" },
-        <Tag>react</Tag>,
-        <Tag>javascript</Tag>
-      )
-    )
   );
 }
