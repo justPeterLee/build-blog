@@ -1,4 +1,4 @@
-import { BlogCard, RecreateBlogCard } from "../../blog/Blog";
+import { BlogCard } from "../../blog/Blog";
 
 export function Introduction() {
   return (
@@ -26,30 +26,42 @@ export function Introduction() {
 }
 
 export function CurrentProject() {
-  const blogCard = RecreateBlogCard();
   return (
     <section className="w-full">
       <h1 className="text-primary-text mb-1">Currently Working On</h1>
       <div className="flex flex-col gap-2 justify-center bg-card p-4 rounded-md shadow">
-        {blogCard}
+        {/* <BlogCard /> */}
       </div>
     </section>
   );
 }
 
-export function RecentProjects() {
+export function RecentProjects({
+  postCards,
+}: {
+  postCards: {
+    title: string;
+    date: string;
+    tags: string[];
+    fileName: string;
+  }[];
+}) {
   return (
     <section className="w-full">
       <h1 className="text-primary-text mb-1">Recent Posts</h1>
 
       <div className="flex flex-col gap-2 justify-center bg-card p-4 rounded-md shadow">
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
-        <BlogCard />
+        {postCards.map((postCard) => {
+          return (
+            <BlogCard
+              key={Math.random()}
+              title={postCard.title}
+              date={postCard.date}
+              tags={postCard.tags}
+              fileName={postCard.fileName}
+            />
+          );
+        })}
       </div>
     </section>
   );
