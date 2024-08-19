@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
-import { uploadFile } from "@/lib/db";
-import { fileRefFormat } from "@/lib/utils";
+// import { getStorage, ref, uploadBytes } from "firebase/storage";
+// import { uploadFile } from "@/lib/db";
+// import { fileRefFormat } from "@/lib/utils";
 export async function POST(req: NextRequest) {
   try {
     // const body = await req.json();
@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
 
     // console.log(`${url}/${file.type}/${file.name}`);
     // console.log(fileRefFormat(url, file));
-    const refName = fileRefFormat(url, file);
-    uploadFile(refName, file);
+    // const refName = fileRefFormat(url, file);
+    // uploadFile(refName, file);
 
     return NextResponse.json("ok", { status: 200 });
   } catch (err) {
