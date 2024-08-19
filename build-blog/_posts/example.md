@@ -14,13 +14,13 @@ In this blog post, I will be talking about my overall experience with Apple's Ai
 
 <!-- <BlogCode language="jsx" file="components/code.tsx"> -->
 
-```tsx
+```jsx file="components/code"
 export default function BlogCode({
   children,
   language,
 }: {
-  code: string;
-  language: string;
+  code: string,
+  language: string,
 }) {
   return (
     <SyntaxHighlighter language={language} style={darcula}>
