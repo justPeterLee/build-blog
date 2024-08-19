@@ -5,7 +5,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { BiMoviePlay } from "react-icons/bi";
 import { FileList } from "../build";
 import { validVideo } from "@/lib/utils";
-import axios from "axios";
+// import axios from "axios";
 export function VideoInput({}: {}) {
   const dropZone = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -260,13 +260,13 @@ function UploadFile({ file }: { file: File }) {
       const formData = new FormData();
       formData.append("file", file);
 
-      await axios.post(
-        "/api/file/upload",
-        { file, url: "example" },
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      // await axios.post(
+      //   "/api/file/upload",
+      //   { file, url: "example" },
+      //   {
+      //     headers: { "Content-Type": "multipart/form-data" },
+      //   }
+      // );
     } catch (err) {
       console.log(err);
     }
