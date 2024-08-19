@@ -84,3 +84,18 @@
     transform: scale(1);
   }
 }
+
+.post h1 {
+  @apply text-4xl text-primary-text;
+}
+
+.post h3 {
+  @apply text-2xl text-secondary-text mb-1 tracking-tight;
+}
+
+.post h4 {
+  @apply text-sm text-tertiary-text font-semibold mb-5;
+}
+.post p {
+  @apply bg-card p-4 rounded-lg text-secondary-text my-4;
+}
