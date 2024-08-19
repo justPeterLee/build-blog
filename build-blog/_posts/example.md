@@ -1,6 +1,6 @@
 # hello world
 
-## Earphones have come a long way. It's about time we forget about the headphone jack.
+### Earphones have come a long way. It's about time we forget about the headphone jack.
 
 ### August 19, 2024
 
