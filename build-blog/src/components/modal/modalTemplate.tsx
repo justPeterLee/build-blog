@@ -36,7 +36,7 @@ export function Modal({
       <div
         id="modal"
         className={cn(
-          "z-40 absolute h-screen w-screen overflow-hidden",
+          "z-40 h-screen w-full overflow-hidden fixed",
           containerClassName
         )}
       >
