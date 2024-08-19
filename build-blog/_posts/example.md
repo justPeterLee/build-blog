@@ -12,7 +12,8 @@ In this blog post, I will be talking about my overall experience with Apple's Ai
 
 <BlogImage image='tony.jpg' folder="example" subTitle="Tony Tony Chopper, doctor of the straw hat pirates" reference="https://www.google.com"/>
 
-<BlogCode language="jsx" file="components/code.tsx">
+<!-- <BlogCode language="jsx" file="components/code.tsx"> -->
+
 ```js
 export default function BlogCode({
   children,
@@ -28,7 +29,8 @@ export default function BlogCode({
   );
 }
 ```
-</BlogCode>
+
+<!-- </BlogCode> -->
 
 <BlogVideo folder="example" video="1MinTimer.mp4"
 subTitle="1 min timer"
