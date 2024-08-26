@@ -4,27 +4,32 @@ import { useRef } from "react";
 import { FaVideo } from "react-icons/fa6";
 import { FaImage } from "react-icons/fa";
 import { LuTextCursor } from "react-icons/lu";
+import { MdCancel } from "react-icons/md";
+import { FaCheckCircle } from "react-icons/fa";
+
 import {
   createMarkers,
   createZone,
   insertElement,
+  inViewPort,
 } from "@/lib/buildUtils/build-utils";
 
 export default function ElementSelection({
   elementList,
   moveInsert,
   hideInsert,
+  addNewElement,
+  getElementList,
 }: {
   elementList: JsxElementList[];
   order: number[];
-  moveInsert: (
-    originalIndex: number,
-    newIndex: number
-  ) => {
+  moveInsert: (newIndex: number) => {
     elementList: any[];
     order: any[];
   };
   hideInsert: () => void;
+  addNewElement: () => void;
+  getElementList: () => JsxElementList[];
 }) {
   const elements = ["Text", "Image", "Video"];
 
@@ -39,6 +44,8 @@ export default function ElementSelection({
             key={index}
             moveInsert={moveInsert}
             hideInsert={hideInsert}
+            addNewElement={addNewElement}
+            getElementList={getElementList}
           />
         );
       })}
@@ -46,27 +53,69 @@ export default function ElementSelection({
   );
 }
 
+function onGrab(element: HTMLDivElement, isGrab: boolean) {
+  if (isGrab) {
+    element.style.cursor = "grabbing";
+    element.style.backgroundColor = "rgb(248,113,113)";
+    element.style.zIndex = "30";
+  } else {
+    element.style.cursor = "grab";
+    element.style.backgroundColor = "transparent";
+    element.style.zIndex = "0";
+  }
+}
 function Element({
   element,
   elementList,
   moveInsert,
   hideInsert,
+  addNewElement,
+  getElementList,
 }: //   update,
 {
   element: string;
   elementList: JsxElementList[];
-  moveInsert: (
-    originalIndex: number,
-    newIndex: number
-  ) => {
+  moveInsert: (newIndex: number) => {
     elementList: any[];
     order: any[];
   };
   hideInsert: () => void;
+  addNewElement: () => void;
+  getElementList: () => JsxElementList[];
 }) {
+  /* ---------------------------------------------------
+   ref values
+   ---------------------------------------------------*/
+  // current element
   const ref = useRef<HTMLDivElement | null>(null);
-  const prevMid = useRef<number | null>(null);
-  const currMid = useRef<number | null>(null);
+
+  // mid postion range (takes last read input and current input -> value between both input = range)
+  const prevMid = useRef<number | null>(null); // min
+  const currMid = useRef<number | null>(null); // max
+
+  // zone detection (limits)
+  // when zone detection function is called ->
+  // use this reference value to determine the zone the element mid position is in
+  const zonesRef = useRef<ZoneValues[] | null>(null);
+
+  // marker detetion (limits)
+  // when a marker detection falls between the [mid position] range ->
+  // call zone detection
+  const markersRef = useRef<number[] | null>(null);
+
+  // current index of "insert-here" element in elementList (order of viewport)
+  const insertIndex = useRef<number>(0);
+
+  // auto call zone detection when element enters viewport (only once)
+  const initialRender = useRef(false);
+
+  // postion of added element
+  const insertValue = useRef<number | null>(null);
+
+  /* ---------------------------------------------------
+   springs
+   ---------------------------------------------------*/
+  // element spring
   const [spring, api] = useSpring(() => ({
     y: 0,
     x: 0,
@@ -74,66 +123,106 @@ function Element({
     immediate: (key: string) => key === "zIndex",
   }));
 
-  const zonesRef = useRef<ZoneValues[] | null>(null);
-  const markersRef = useRef<number[] | null>(null);
-  const insertIndex = useRef<number>(0);
-  const initialRef = useRef(false);
-  const update = () => {
+  // icons spring values
+  // use spring on icons to allow transformation without causing
+  // a re-render
+
+  // fail icon spring
+  const [failSpring, failApi] = useSpring(() => ({
+    opacity: 0,
+  }));
+  // valid icon spring
+  const [vaildSpring, vaildApi] = useSpring(() => ({
+    opacity: 0,
+  }));
+
+  // local functions
+  const updateZones = () => {
     zonesRef.current = createZone(elementList);
     markersRef.current = createMarkers(elementList);
   };
 
+  const getMidRange = (pos: DOMRect) => {
+    prevMid.current = currMid.current;
+    currMid.current = Math.round(pos.top + pos.height / 2);
+  };
+
+  const isValidInsert = (isValid: "Y" | "N" | "OFF") => {
+    if (isValid === "Y") {
+      vaildApi.set({ opacity: 1 });
+      failApi.set({ opacity: 0 });
+    } else if (isValid === "N") {
+      vaildApi.set({ opacity: 0 });
+      failApi.set({ opacity: 1 });
+      hideInsert();
+    } else {
+      vaildApi.set({ opacity: 0 });
+      failApi.set({ opacity: 0 });
+      hideInsert();
+    }
+  };
+
+  // motion function (bind) => use Guesture
   const bind = useDrag(({ movement: [mx, my], down }) => {
     if (ref.current) {
+      const refElement = ref.current;
       if (down) {
-        ref.current.style.cursor = "grabbing";
-        ref.current.style.backgroundColor = "rgb(248,113,113)";
-        ref.current.style.zIndex = "30";
+        // on grab styling
+        onGrab(ref.current, true);
 
-        prevMid.current = currMid.current;
-        currMid.current = Math.round(
-          ref.current.getBoundingClientRect().top +
-            ref.current.getBoundingClientRect().height / 2
-        );
-      } else {
-        ref.current.style.cursor = "grab";
-        ref.current.style.backgroundColor = "transparent";
-        ref.current.style.zIndex = "0";
+        // get mid section range -> prevMid , currMid (useRef)
+        getMidRange(refElement.getBoundingClientRect());
 
-        prevMid.current = null;
-      }
+        // move insert
+        if (zonesRef.current && markersRef.current) {
+          const move = insertElement(
+            refElement,
+            prevMid.current,
+            zonesRef.current,
+            markersRef.current,
+            initialRender.current
+          );
 
-      if (zonesRef.current && markersRef.current) {
-        const move = insertElement(
-          ref.current,
-          prevMid.current,
-          zonesRef.current,
-          markersRef.current,
-          initialRef.current
-        );
+          if (move !== null) {
+            const moveData = moveInsert(move);
+            insertValue.current = move;
+            insertIndex.current = moveData.order.indexOf(0);
 
-        if (move !== null) {
-          const moveData = moveInsert(insertIndex.current, move);
-          if (!initialRef.current) {
-            initialRef.current = true;
+            updateZones();
           }
-          insertIndex.current = moveData.order.indexOf(0);
-          update();
+        } else {
+          updateZones();
+        }
+
+        isValidInsert(insertValue.current !== null ? "Y" : "N");
+
+        // in viewport actions
+        if (inViewPort(null, refElement.getBoundingClientRect())) {
+          initialRender.current = true;
+        } else {
+          initialRender.current = false;
+          insertValue.current = null;
         }
       } else {
-        update();
+        // reset
+        onGrab(ref.current, false);
+        isValidInsert("OFF");
+
+        prevMid.current = null;
+        initialRender.current = false;
+
+        if (insertValue.current !== null) {
+          addNewElement();
+          insertValue.current = null;
+        }
       }
     }
 
-    if (!down) {
-      console.log("dropped");
-      hideInsert();
-      initialRef.current = false;
-    }
     api.start({
       y: my,
       x: mx,
       scale: 0.8,
+      immediate: true,
     });
     if (!down) {
       api.set({
@@ -162,14 +251,32 @@ function Element({
           "bg-code-card rounded-lg h-10 w-10 hover:cursor-grab absolute  top-0 touch-none duration-0"
         }
       >
-        <div className="flex flex-col justify-center items-center h-full text-primary-text select-none">
-          {element === "Text" ? (
-            <LuTextCursor color="text-primary-text" className="duration-0" />
-          ) : element === "Image" ? (
-            <FaImage color="text-primary-text" className="duration-0" />
-          ) : (
-            <FaVideo color="text-primary-text" className="duration-0" />
-          )}
+        <div className="w-full h-full relative ">
+          <div className="flex flex-col justify-center items-center h-full text-primary-text select-none">
+            {element === "Text" ? (
+              <LuTextCursor color="text-primary-text" className="duration-0" />
+            ) : element === "Image" ? (
+              <FaImage color="text-primary-text" className="duration-0" />
+            ) : (
+              <FaVideo color="text-primary-text" className="duration-0" />
+            )}
+          </div>
+          <animated.div
+            style={failSpring}
+            className={"absolute -top-2 -right-2"}
+          >
+            <div className="h-full w-full bg-card rounded-full">
+              <MdCancel className="text-red-500" size={20} />
+            </div>
+          </animated.div>
+          <animated.div
+            style={vaildSpring}
+            className={"absolute top-[-0.4rem] right-[-0.4rem]"}
+          >
+            <div className="h-full w-full bg-card rounded-full">
+              <FaCheckCircle className="text-green-500" size={17} />
+            </div>
+          </animated.div>
         </div>
       </animated.div>
     </div>
