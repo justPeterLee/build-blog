@@ -1,17 +1,21 @@
+import { useContext, useRef } from "react";
 import { animated, useSpring, useSpringValue } from "@react-spring/web";
 import { useDrag } from "@use-gesture/react";
-import { useContext, useRef } from "react";
-import { FaVideo } from "react-icons/fa6";
-import { FaImage } from "react-icons/fa";
-import { LuTextCursor } from "react-icons/lu";
-import { MdCancel } from "react-icons/md";
-import { FaCheckCircle } from "react-icons/fa";
+
+// util functions
 import { insertElement, inViewPort } from "@/lib/buildUtils/build-utils";
 import { BuildContext } from "./buildContext/BuildContext";
 import {
   ElementSelectionContext,
   ElementSelectionContextProvider,
 } from "./buildContext/ElementSelectorContext";
+
+// icons 15.5k
+import { FaVideo } from "react-icons/fa6";
+import { FaImage } from "react-icons/fa";
+import { LuTextCursor } from "react-icons/lu";
+import { MdCancel } from "react-icons/md";
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function ElementSelection() {
   const elements = ["Text", "Image", "Video"];

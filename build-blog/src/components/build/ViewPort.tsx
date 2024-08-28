@@ -1,13 +1,8 @@
 "use client";
 
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import ElementSelection from "./ElementSelection";
-import {
-  AnimationElement,
-  InsertHereLine,
-  TextElement,
-  VideoElement,
-} from "./Element";
+import { AnimationElement, InsertHereLine } from "./Element";
 import { animated } from "@react-spring/web";
 
 import {
