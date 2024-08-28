@@ -1,6 +1,5 @@
 export function insertElement(
   elementSelect: HTMLDivElement,
-  //   elementList: JsxElementList[],
   prevSelectMid: number | null,
   zones: ZoneValues[],
   markers: number[],
@@ -18,11 +17,11 @@ export function insertElement(
   const viewPortPos = viewPort.getBoundingClientRect();
   const isInViewPort = inViewPort(viewPortPos, selectPos);
 
-  if (!initial && isInViewPort) {
+  if (initial && isInViewPort) {
     zoneDetect = zoneDetection(selectMid, zones);
   }
 
-  if (prevSelectMid && isInViewPort && initial) {
+  if (prevSelectMid && isInViewPort) {
     if (markerDetection(markers, prevSelectMid, selectMid)) {
       zoneDetect = zoneDetection(selectMid, zones);
     }
@@ -91,6 +90,9 @@ export function createZone(elementList: JsxElementList[]) {
 export function zoneDetection(selectedPos: number, zoneValues: ZoneValues[]) {
   let index = null;
 
+  if (zoneValues.length === 1) {
+    return zoneValues[0].index;
+  }
   for (let i = 0; i < zoneValues.length; i++) {
     if (selectedPos < zoneValues[i].limit) {
       index = zoneValues[i].index;

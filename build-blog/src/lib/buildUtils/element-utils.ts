@@ -1,9 +1,11 @@
+import { ElementSpringType } from "@/components/build/buildContext/BuildContext";
+import { SpringRef } from "@react-spring/web";
 import swap from "lodash-move";
 export function getAccYPos(
   index: number,
   elementList: JsxElementList[],
   offset = 16,
-  showInsert = false
+  showInsert = true
 ) {
   let Ypos = 0;
   for (let i = 0; i < index; i++) {
@@ -39,6 +41,19 @@ export function switchOrder(
   const newElementList = swap(elementList, originIndex, newIndex);
   const newOrder = swap(order, originIndex, newIndex);
   return { elementList: newElementList, order: newOrder };
+}
+
+export function swapOrder(
+  elementList: JsxElementList[],
+  originIndex: number,
+  newIndex: number
+) {
+  const newElementList = swap(
+    elementList,
+    originIndex,
+    newIndex
+  ) as JsxElementList[];
+  return newElementList;
 }
 
 export function fn(
@@ -85,10 +100,10 @@ export function fn(
 
 export function getViewPortHeight(
   elementList: JsxElementList[],
-  showInsert = true,
+  showInsert = false,
   offset = 16
 ) {
-  let height = showInsert ? 0 : 16;
+  let height = 16;
 
   const vpHeight = 160;
 
@@ -98,15 +113,70 @@ export function getViewPortHeight(
     const element = document.getElementById(elementList[i].id);
     if (!element) continue;
 
-    height += element.getBoundingClientRect().height;
-
-    if (elementList[i].id !== "insert-here") {
-      height += offset;
-    }
-
-    if (elementList[i].id === "insert-here" && i === 0 && showInsert) {
-      height += offset;
-    }
+    height += element.getBoundingClientRect().height + offset;
   }
-  return height / vpHeight;
+
+  const scaleRatio = height / vpHeight;
+
+  if (scaleRatio < 1) {
+    return 1;
+  }
+
+  return scaleRatio;
+}
+
+export function setAnimationElement(
+  elementListOrder: JsxElementList[],
+  elementApiObj: {
+    [key: string]: ElementSpringType;
+  },
+  showInsert = false,
+  offset = 16
+) {
+  let yTracker = 0;
+  for (let i = 0; i < elementListOrder.length; i++) {
+    const elementDOM = document.getElementById(elementListOrder[i].id);
+    if (!elementDOM) continue;
+    const springApi = elementApiObj[elementListOrder[i].id];
+    if (!springApi) continue;
+
+    if (elementListOrder[i].id === "insert-here" && !showInsert) {
+      springApi.set({ opacity: 0 });
+      continue;
+    }
+
+    const elementBCR = elementDOM.getBoundingClientRect();
+
+    springApi.start({ y: yTracker, opacity: 1 });
+    yTracker += elementBCR.height + offset;
+    // console.log(i);
+  }
+}
+
+export function swapElementAnimation(
+  focusId: string,
+  swapId: string,
+  swapSpring: ElementSpringType,
+  focusSpring?: ElementSpringType
+) {
+  console.log("run");
+  const viewPort = document.getElementById("jsxViewPort");
+  const swapElement = document.getElementById(swapId);
+  const focusElement = document.getElementById(focusId);
+
+  if (!swapElement || !focusElement || !viewPort) return;
+
+  const viewPortBCR = viewPort.getBoundingClientRect();
+  const swapBCR = swapElement.getBoundingClientRect();
+  const focusBCR = focusElement.getBoundingClientRect();
+
+  const currentYPos = swapBCR.top - viewPortBCR.top - 16;
+  const focusYPos = focusBCR.top - viewPortBCR.top - 16;
+
+  // swapSpring.set({ y: focusYPos });
+
+  // if (focusSpring) {
+  //   // console.log(currentYPos);
+  //   focusSpring.set({ y: currentYPos + 16 });
+  // }
 }

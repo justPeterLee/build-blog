@@ -23,6 +23,11 @@ interface ZoneValues {
   index: number;
 }
 
+interface SpringType {
+  y: number;
+  opacity: number;
+}
+
 declare module "lodash-move" {
   const fn: (list: any[], b: number, c: number) => any[];
   export default fn;
