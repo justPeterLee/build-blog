@@ -171,10 +171,6 @@ function Element({
         buildContext.insertFunc.hideInsert();
         prevMid.current = null;
         initialRender.current = false;
-
-        // if (insertValue.current !== null) {
-        //   insertValue.current = null;
-        // }
       }
     }
 
@@ -182,7 +178,7 @@ function Element({
       y: my,
       x: mx,
       scale: 0.8,
-      //   immediate: true,
+      immediate: true,
     });
     if (!down) {
       api.set({
@@ -194,6 +190,7 @@ function Element({
         onResolve: () => {
           if (insertValue.current !== null) {
             console.log(insertValue.current);
+            insertValue.current = null;
           }
           //   buildContext.addElement();
         },
