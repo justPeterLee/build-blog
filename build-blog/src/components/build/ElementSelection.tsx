@@ -5,10 +5,7 @@ import { useDrag } from "@use-gesture/react";
 // util functions
 import { insertElement, inViewPort } from "@/lib/buildUtils/build-utils";
 import { BuildContext } from "./buildContext/BuildContext";
-import {
-  ElementSelectionContext,
-  ElementSelectionContextProvider,
-} from "./buildContext/ElementSelectorContext";
+import { ElementSelectionContext } from "./buildContext/ElementSelectorContext";
 
 // icons 15.5k
 import { FaVideo } from "react-icons/fa6";
@@ -21,13 +18,11 @@ export default function ElementSelection() {
   const elements = ["Text", "Image", "Video"];
 
   return (
-    <ElementSelectionContextProvider>
-      <div className="absolute min-h-12 min-w-12 p-1 rounded-lg bg-card -left-[5rem] -top-0 flex flex-col gap-1">
-        {elements.map((element: string, index: number) => {
-          return <Element element={element} key={index} />;
-        })}
-      </div>
-    </ElementSelectionContextProvider>
+    <div className="absolute min-h-12 min-w-12 p-1 rounded-lg bg-card -left-[5rem] -top-0 flex flex-col gap-1">
+      {elements.map((element: string, index: number) => {
+        return <Element element={element} key={index} />;
+      })}
+    </div>
   );
 }
 
@@ -60,6 +55,7 @@ function Element({
   // mid postion range (takes last read input and current input -> value between both input = range)
   const prevMid = useRef<number | null>(null); // min
   const currMid = useRef<number | null>(null); // max
+  const moveRef = useRef<number | null>(null);
 
   // auto call zone detection when element enters viewport (only once)
   const initialRender = useRef(false);
@@ -142,14 +138,20 @@ function Element({
             initialRender.current
           );
 
-          if (move !== null) {
-            buildContext.insertFunc.swapElement("insert-here", move);
+          if (move !== null && moveRef.current !== move.index) {
+            moveRef.current = move.index;
 
-            insertValue.current = move;
-
-            elementSelectionContext.function.updateZones(
-              buildContext.getElementList("ref") as JsxElementList[]
+            buildContext.insertFunc.swapElement(
+              "insert-here",
+              move.index,
+              move.id
             );
+
+            insertValue.current = move.index;
+
+            // elementSelectionContext.function.updateZones(
+            //   buildContext.getElementList("ref") as JsxElementList[]
+            // );
           }
         } else {
           elementSelectionContext.function.updateZones(
@@ -164,11 +166,13 @@ function Element({
           initialRender.current = true;
         } else {
           initialRender.current = false;
+          moveRef.current = null;
 
           insertValue.current = null;
         }
       } else {
         // reset
+        moveRef.current = null;
         onGrabTracker.current = false;
         onGrab(ref.current, false);
         isValidInsert("OFF");
@@ -182,21 +186,20 @@ function Element({
       y: my,
       x: mx,
       scale: 0.8,
-      immediate: true,
+      immediate: (key) => key === "y" || key === "x",
     });
     if (!down) {
-      api.set({
+      api.start({
         y: 0,
         x: 0,
         scale: 1,
-      });
-      api.start({
+        immediate: true,
+        // immediate: (key) => key === "y"
         onResolve: () => {
           if (insertValue.current !== null) {
-            console.log(insertValue.current);
+            buildContext.addElement(element, insertValue.current);
             insertValue.current = null;
           }
-          //   buildContext.addElement();
         },
       });
     }

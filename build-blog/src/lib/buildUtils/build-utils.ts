@@ -60,10 +60,14 @@ export function createZone(elementList: JsxElementList[]) {
   // create deafult zone
   zoneValues.push({
     limit: viewPort.getBoundingClientRect().bottom,
-    index: elementList.length,
+    index: elementList.length - 1,
+    id: "bottom",
   });
 
   // create element zones
+  let yTracker = viewPort.getBoundingClientRect().top;
+  let previousHeight = 0;
+
   for (let i = 0; i < elementList.length; i++) {
     const elementId = elementList[i].id;
     if (elementId === "insert-here") continue;
@@ -71,11 +75,22 @@ export function createZone(elementList: JsxElementList[]) {
     const element = document.getElementById(elementId);
     if (!element) continue;
 
-    const midPoint =
-      element.getBoundingClientRect().top +
-      element.getBoundingClientRect().height / 2;
+    const halfHeight = element.getBoundingClientRect().height / 2;
 
-    zoneValues.push({ limit: midPoint, index: i });
+    if (i === 0) {
+      yTracker += halfHeight + 16;
+      // previousHeight = halfHeight
+    } else {
+      yTracker += previousHeight + halfHeight + 16;
+      // previousHeight = halfHeight
+    }
+    previousHeight = halfHeight;
+
+    zoneValues.push({
+      limit: yTracker,
+      index: 0,
+      id: elementList[i].id,
+    });
   }
 
   // sort boundaries
@@ -91,12 +106,16 @@ export function zoneDetection(selectedPos: number, zoneValues: ZoneValues[]) {
   let index = null;
 
   if (zoneValues.length === 1) {
-    return zoneValues[0].index;
+    return { index: zoneValues[0].index, id: zoneValues[0].id };
   }
   for (let i = 0; i < zoneValues.length; i++) {
     if (selectedPos < zoneValues[i].limit) {
-      index = zoneValues[i].index;
+      index = { index: zoneValues[i].index, id: zoneValues[i].id };
       break;
+    }
+
+    if (zoneValues.length - 1 === i) {
+      //   console.log(i);
     }
   }
 
@@ -105,13 +124,19 @@ export function zoneDetection(selectedPos: number, zoneValues: ZoneValues[]) {
 
 export function createMarkers(elementList: JsxElementList[]) {
   const markers = [];
+  const viewPort = document.getElementById("viewPort-view");
+  if (!viewPort) return [];
+  let yTracker = viewPort.getBoundingClientRect().top;
+
   for (let i = 0; i < elementList.length; i++) {
     if (elementList[i].id === "insert-here") continue;
     const element = document.getElementById(elementList[i].id);
     if (!element) continue;
 
-    markers.push(element.getBoundingClientRect().top + 20);
-    markers.push(element.getBoundingClientRect().bottom - 20);
+    markers.push(yTracker + 16);
+    yTracker += 16 + element.getBoundingClientRect().height;
+
+    markers.push(yTracker);
   }
 
   return markers;
@@ -122,4 +147,24 @@ function markerDetection(markers: number[], min: number, max: number) {
     markers.some((num) => num >= min && num <= max) ||
     markers.some((num) => num <= min && num >= max)
   );
+}
+
+export function initialNewRender(elementList: JsxElementList[], id: string) {
+  // get index of element in list
+  const index = elementList.findIndex((element) => element.id === id);
+
+  if (index === 0) {
+    // default
+    return 0;
+  }
+
+  const viewPort = document.getElementById("viewPort-view");
+  const prevElement = document.getElementById(elementList[index - 1].id);
+  if (!prevElement || !viewPort) return 0;
+
+  const yPosOrigin =
+    prevElement.getBoundingClientRect().bottom -
+    viewPort.getBoundingClientRect().top;
+
+  return yPosOrigin;
 }

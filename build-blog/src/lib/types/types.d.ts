@@ -21,11 +21,15 @@ interface JsxElementList {
 interface ZoneValues {
   limit: number;
   index: number;
+  id: string;
 }
 
 interface SpringType {
   y: number;
   opacity: number;
+  zIndex: number;
+  scale: number;
+  shadow: number;
 }
 
 declare module "lodash-move" {

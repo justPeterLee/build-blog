@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ElementSelection from "./ElementSelection";
 import { AnimationElement, InsertHereLine } from "./Element";
 import { animated } from "@react-spring/web";
@@ -9,35 +9,38 @@ import {
   BuildContext,
   BuildContextProvider,
 } from "./buildContext/BuildContext";
+import {
+  ElementSelectionContext,
+  ElementSelectionContextProvider,
+} from "./buildContext/ElementSelectorContext";
 
 export default function ViewPort() {
   return (
     <BuildContextProvider>
-      <div className="w-full relative">
-        <JsxViewPort />
-      </div>
+      <ElementSelectionContextProvider>
+        <div className="w-full relative">
+          <JsxViewPort />
+        </div>
+      </ElementSelectionContextProvider>
     </BuildContextProvider>
   );
 }
 
 function JsxViewPort() {
   const buildContext = useContext(BuildContext);
-  if (buildContext === undefined) return <>failed to loads</>;
+  const elementSelectionContext = useContext(ElementSelectionContext);
+  if (buildContext === undefined || elementSelectionContext === undefined)
+    return <>failed to loads</>;
 
   useEffect(() => {
-    console.log("rerender viewport");
     buildContext.initialRender();
+    elementSelectionContext.function.updateZones(
+      buildContext.getElementList("ref")
+    );
   }, [buildContext.getElementList("state")]);
 
   return (
     <>
-      <button
-        onClick={() => {
-          buildContext.initialRender();
-        }}
-      >
-        click
-      </button>
       <animated.div
         style={buildContext.viewPortSpring}
         id="viewPort-view"
@@ -58,14 +61,14 @@ function JsxViewPort() {
               if (element.id === "insert-here")
                 return (
                   <InsertHereLine
-                    key={index}
+                    key={element.id}
                     style={{}}
                     addSpring={buildContext.insertFunc.addSpringInstance}
                   />
                 );
               return (
                 <AnimationElement
-                  key={index}
+                  key={element.id}
                   id={element.id}
                   type={element.component}
                   style={{ y: 10 }}

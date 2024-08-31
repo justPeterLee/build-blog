@@ -1,103 +1,46 @@
 import { ElementSpringType } from "@/components/build/buildContext/BuildContext";
-import { SpringRef } from "@react-spring/web";
 import swap from "lodash-move";
-export function getAccYPos(
-  index: number,
-  elementList: JsxElementList[],
-  offset = 16,
-  showInsert = true
-) {
-  let Ypos = 0;
-  for (let i = 0; i < index; i++) {
-    if (index === 0) break;
-    if (!showInsert && elementList[i].id === "insert-here") continue;
+import { nanoid } from "nanoid";
 
-    const element = document.getElementById(elementList[i].id);
-    if (!element) continue;
-
-    // console.log(elementList[index]);
-
-    if (elementList[index].id === "insert-here" && i === index - 1) {
-      Ypos += element.getBoundingClientRect().height;
-    } else if (elementList[i].id === "insert-here") {
-      Ypos += element.getBoundingClientRect().height;
-      if (i > 0) {
-        Ypos -= offset;
-      }
-    } else {
-      Ypos += element.getBoundingClientRect().height + offset;
-    }
-  }
-
-  return Ypos;
-}
-
-export function switchOrder(
-  elementList: JsxElementList[],
-  order: number[],
-  originIndex: number,
-  newIndex: number
-) {
-  const newElementList = swap(elementList, originIndex, newIndex);
-  const newOrder = swap(order, originIndex, newIndex);
-  return { elementList: newElementList, order: newOrder };
-}
-
-export function swapOrder(
-  elementList: JsxElementList[],
-  originIndex: number,
-  newIndex: number
-) {
-  const newElementList = swap(
-    elementList,
-    originIndex,
-    newIndex
-  ) as JsxElementList[];
-  return newElementList;
-}
-
-export function fn(
-  elementList: JsxElementList[],
-  order: number[],
+// main animation function
+export function setAnimationElement(
+  elementListOrder: JsxElementList[],
+  elementApiObj: {
+    [key: string]: {
+      spring: ElementSpringType;
+      updateYPos: (newYPos: number) => void;
+      getYPos: () => void;
+    };
+  },
   showInsert = false,
+  focus?: string,
   offset = 16
 ) {
-  return (index: number) => {
-    const trueIndex = order.indexOf(index);
+  let yTracker = 0;
+  for (let i = 0; i < elementListOrder.length; i++) {
+    const elementDOM = document.getElementById(elementListOrder[i].id);
+    if (!elementDOM) continue;
+    const springApi = elementApiObj[elementListOrder[i].id];
+    if (!springApi) continue;
 
-    // default show insert state
-    if (elementList[trueIndex].id === "insert-here" && !showInsert) {
-      return { y: 0, visibility: "hidden" };
+    // console.log(elementListOrder[i].id);
+    if (elementListOrder[i].id === "insert-here" && !showInsert) {
+      springApi.spring.set({ opacity: 0 });
+      continue;
     }
 
-    // first index of array
-    if (trueIndex === 0) {
-      return { y: 0, visibility: "visible" };
+    const elementBCR = elementDOM.getBoundingClientRect();
+
+    springApi.updateYPos(yTracker);
+    if (focus !== elementListOrder[i].id) {
+      springApi.spring.start({ y: yTracker, opacity: 1 });
     }
 
-    // set previous element to index previous to current index (current: 2 -> previous: 1)
-    let prevElement: HTMLElement | null = null;
-
-    // don't accound for insert here element if (showInsert === false)
-    if (elementList[trueIndex - 1].id === "insert-here" && !showInsert) {
-      // if (showInsert === false && previousElement === "show-insert") -> check condition to make sure not 2nd in array
-      if (trueIndex === 1) {
-        return { y: 0, visibility: "visible" };
-      } else {
-        prevElement = document.getElementById(elementList[trueIndex - 2].id);
-      }
-    } else {
-      prevElement = document.getElementById(elementList[trueIndex - 1].id);
-    }
-
-    if (!prevElement) return { y: 0, visibility: "hidden" };
-
-    // ----------- independent y pos getter ----------
-    const accYpos = getAccYPos(trueIndex, elementList, offset, showInsert);
-    return { y: accYpos, visibility: "visible" };
-  };
+    yTracker += elementBCR.height + offset;
+  }
 }
 
+// update viewport scale
 export function getViewPortHeight(
   elementList: JsxElementList[],
   showInsert = false,
@@ -125,58 +68,38 @@ export function getViewPortHeight(
   return scaleRatio;
 }
 
-export function setAnimationElement(
-  elementListOrder: JsxElementList[],
-  elementApiObj: {
-    [key: string]: ElementSpringType;
-  },
-  showInsert = false,
-  offset = 16
+// array functions
+// move elements
+export function swapOrder(
+  elementList: JsxElementList[],
+  originIndex: number,
+  newIndex: number
 ) {
-  let yTracker = 0;
-  for (let i = 0; i < elementListOrder.length; i++) {
-    const elementDOM = document.getElementById(elementListOrder[i].id);
-    if (!elementDOM) continue;
-    const springApi = elementApiObj[elementListOrder[i].id];
-    if (!springApi) continue;
-
-    if (elementListOrder[i].id === "insert-here" && !showInsert) {
-      springApi.set({ opacity: 0 });
-      continue;
-    }
-
-    const elementBCR = elementDOM.getBoundingClientRect();
-
-    springApi.start({ y: yTracker, opacity: 1 });
-    yTracker += elementBCR.height + offset;
-    // console.log(i);
-  }
+  const newElementList = swap(
+    elementList,
+    originIndex,
+    newIndex
+  ) as JsxElementList[];
+  return newElementList;
 }
 
-export function swapElementAnimation(
-  focusId: string,
-  swapId: string,
-  swapSpring: ElementSpringType,
-  focusSpring?: ElementSpringType
+//insert elements
+export function insertNewElement(
+  type: string,
+  insertIndex: number,
+  elementList: JsxElementList[]
 ) {
-  console.log("run");
-  const viewPort = document.getElementById("jsxViewPort");
-  const swapElement = document.getElementById(swapId);
-  const focusElement = document.getElementById(focusId);
+  // generate new unique id
+  const uniqueId = nanoid(10);
+  const elementId = uniqueId + type;
 
-  if (!swapElement || !focusElement || !viewPort) return;
+  const newElement = { id: elementId, component: type, content: "" };
 
-  const viewPortBCR = viewPort.getBoundingClientRect();
-  const swapBCR = swapElement.getBoundingClientRect();
-  const focusBCR = focusElement.getBoundingClientRect();
+  const newArray: JsxElementList[] = [
+    ...elementList.slice(0, insertIndex),
+    newElement,
+    ...elementList.slice(insertIndex),
+  ];
 
-  const currentYPos = swapBCR.top - viewPortBCR.top - 16;
-  const focusYPos = focusBCR.top - viewPortBCR.top - 16;
-
-  // swapSpring.set({ y: focusYPos });
-
-  // if (focusSpring) {
-  //   // console.log(currentYPos);
-  //   focusSpring.set({ y: currentYPos + 16 });
-  // }
+  return newArray;
 }
