@@ -13,7 +13,7 @@ interface PostFileMeta {
 
 interface JsxElementList {
   id: string;
-  component: string;
+  component: "Text" | "Image" | "Video" | "Other";
   content: string;
   props?: { [key as string]: string };
 }

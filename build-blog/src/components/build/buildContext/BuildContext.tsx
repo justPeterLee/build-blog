@@ -8,7 +8,7 @@ import { SpringRef, SpringValue, useSpring } from "@react-spring/web";
 import { createContext, ReactNode, useEffect, useRef, useState } from "react";
 
 export type ElementSpringType = SpringRef<SpringType>;
-
+export type ModeType = "point" | "drag" | "active";
 interface BuildContextType {
   addElement: (type: string, insertIndex: number) => void;
   getElementList: (type: "ref" | "state") => JsxElementList[];
@@ -31,6 +31,11 @@ interface BuildContextType {
       focus?: string
     ) => JsxElementList[] | undefined;
   };
+  focus: {
+    value: () => { id: string; reset: () => void } | null;
+    onFocus: (id: string, reset: () => void) => void;
+    onBlur: () => void;
+  };
 }
 
 export const BuildContext = createContext<BuildContextType | undefined>(
@@ -46,18 +51,19 @@ export interface ElementSpringObj {
 }
 export function BuildContextProvider({ children }: { children: ReactNode }) {
   const elementListRef = useRef<JsxElementList[]>([
-    { id: "insert-here", component: "insert-here", content: "" },
-    { id: "unique-id", component: "Text", content: "" },
-    { id: "unique-id2", component: "Text", content: "" },
+    { id: "insert-here", component: "Other", content: "" },
+    {
+      id: "unique-id",
+      component: "Text",
+      content: "",
+    },
+    { id: "unique-id2", component: "Text", content: "text 2" },
     { id: "unique-id3", component: "Video", content: "" },
   ]);
 
-  const [elementListState, setElementListState] = useState<JsxElementList[]>([
-    { id: "insert-here", component: "insert-here", content: "" },
-    { id: "unique-id", component: "Text", content: "" },
-    { id: "unique-id2", component: "Text", content: "" },
-    { id: "unique-id3", component: "Video", content: "" },
-  ]);
+  const [elementListState, setElementListState] = useState<JsxElementList[]>(
+    elementListRef.current
+  );
 
   const elementSpringObj = useRef<ElementSpringObj>({});
 
@@ -77,7 +83,6 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
 
   // mutation functions
   // swap insert
-
   const swapElement = (
     id: string,
     newIndex: number,
@@ -147,17 +152,48 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
 
   const initialRender = () => {
     setAnimationElement(elementListState, elementSpringObj.current, false);
-  };
-
-  useEffect(() => {
-    console.log("rerendered");
-    initialRender();
-    // console.log(elementListState);
-    viewPortSpringApi.set({
+    viewPortSpringApi.start({
       scaleY: getViewPortHeight(elementListRef.current, false),
     });
-  }, [elementListState]);
+  };
 
+  // -------- focus ---------
+  const [focusState, setFocusState] = useState<{
+    id: string;
+    reset: () => void;
+  } | null>(null);
+  const focus = useRef<{ id: string; reset: () => void } | null>(null);
+
+  const getFocus = () => {
+    return focus.current;
+  };
+  const onFocus = (id: string, reset: () => void) => {
+    if (id === "") {
+      focus.current = null;
+      setFocusState(null);
+      return;
+    }
+
+    if (focus.current !== null) {
+      focus.current.reset();
+      focus.current = null;
+      setFocusState(null);
+    }
+    if (focus.current === null) {
+      focus.current = { id, reset };
+      setFocusState(focus.current);
+    }
+  };
+
+  const onBlur = () => {
+    if (focus.current !== null) {
+      console.log("blurring");
+      focus.current.reset();
+      focus.current = null;
+      setFocusState(null);
+      // setAnimationElement(elementListState, elementSpringObj.current, false);
+    }
+  };
   return (
     <BuildContext.Provider
       value={{
@@ -169,6 +205,11 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
           hideInsert,
           addSpringInstance,
           swapElement,
+        },
+        focus: {
+          value: getFocus,
+          onFocus,
+          onBlur,
         },
       }}
     >

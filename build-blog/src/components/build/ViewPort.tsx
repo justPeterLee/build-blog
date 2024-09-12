@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useRef } from "react";
 import ElementSelection from "./ElementSelection";
-import { AnimationElement, InsertHereLine } from "./Element";
+import { AnimationElement, InsertHereLine } from "./Element/Element";
 import { animated } from "@react-spring/web";
 
 import {
@@ -13,14 +13,18 @@ import {
   ElementSelectionContext,
   ElementSelectionContextProvider,
 } from "./buildContext/ElementSelectorContext";
+import { Inspector } from "./Inspector/Inspector";
 
 export default function ViewPort() {
   return (
     <BuildContextProvider>
       <ElementSelectionContextProvider>
-        <div className="w-full relative">
-          <JsxViewPort />
-        </div>
+        <FocusBackdrop />
+        <article className="w-[42rem] flex-grow flex flex-col justify-center items-center m-auto">
+          <div className="w-full relative">
+            <JsxViewPort />
+          </div>
+        </article>
       </ElementSelectionContextProvider>
     </BuildContextProvider>
   );
@@ -62,23 +66,36 @@ function JsxViewPort() {
                 return (
                   <InsertHereLine
                     key={element.id}
-                    style={{}}
                     addSpring={buildContext.insertFunc.addSpringInstance}
                   />
                 );
               return (
                 <AnimationElement
                   key={element.id}
-                  id={element.id}
-                  type={element.component}
-                  style={{ y: 10 }}
+                  elementData={element}
                   addSpring={buildContext.insertFunc.addSpringInstance}
                 />
               );
             })}
           </animated.div>
+
+          <Inspector />
         </div>
       </div>
     </>
+  );
+}
+
+export function FocusBackdrop() {
+  const buildContext = useContext(BuildContext);
+  if (!buildContext) return <></>;
+  return (
+    <div
+      className="fixed top-0 h-screen w-full z-10 "
+      onClick={() => {
+        buildContext.focus.onBlur();
+        console.log("blura");
+      }}
+    ></div>
   );
 }

@@ -1,5 +1,7 @@
 import { createMarkers, createZone } from "@/lib/buildUtils/build-utils";
-import { createContext, ReactNode, useRef } from "react";
+import { createContext, ReactNode, useEffect, useRef } from "react";
+
+export type ModeType = "point" | "drag" | "active";
 
 interface ElementSelectionContextType {
   zones: ZoneValues[] | null;
@@ -8,8 +10,13 @@ interface ElementSelectionContextType {
   getZones: () => ZoneValues[] | null;
   getMarkers: () => number[] | null;
 
+  getMode: () => ModeType;
+  getFocus: () => string | null;
+
   function: {
     updateZones: (elementList: JsxElementList[]) => void;
+    setMode: (newMode: ModeType) => void;
+    setFocus: (newMode: JsxElementList) => void;
   };
 }
 export const ElementSelectionContext = createContext<
@@ -39,10 +46,27 @@ export function ElementSelectionContextProvider({
     return markers.current;
   };
 
+  const mode = useRef<ModeType>("point");
+  const focus = useRef<string | null>(null);
+
   // mutation functions
   const updateZones = (elementList: JsxElementList[]) => {
     zones.current = createZone(elementList);
     markers.current = createMarkers(elementList);
+  };
+
+  const setMode = (newMode: ModeType) => {
+    mode.current = newMode;
+  };
+  const setFocus = (newFocus: JsxElementList) => {
+    focus.current = newFocus.id;
+  };
+
+  const getMode = () => mode.current;
+  const getFocus = () => focus.current;
+
+  const handleClick = () => {
+    console.log("click");
   };
 
   return (
@@ -54,7 +78,10 @@ export function ElementSelectionContextProvider({
         getZones,
         getMarkers,
 
-        function: { updateZones },
+        getMode,
+        getFocus,
+
+        function: { updateZones, setMode, setFocus },
       }}
     >
       {children}

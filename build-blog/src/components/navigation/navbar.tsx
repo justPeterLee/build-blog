@@ -4,9 +4,9 @@ import NavThemeButton, { NavBuildButton } from "./navbarComponents/NavButtons";
 
 export function Navbar() {
   return (
-    <header className="p-10 flex justify-center items-center ">
+    <header className="p-10 flex justify-center items-center">
       {/* links */}
-      <nav className="flex justify-between items-center bg-navbar rounded-lg w-[42rem] p-2 px-4 shadow-md">
+      <nav className="flex justify-between items-center bg-navbar rounded-lg w-[42rem] p-2 px-4 shadow-md  z-20">
         <NavLinkContainer />
 
         {/* buttons */}

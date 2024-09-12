@@ -15,10 +15,17 @@ import { MdCancel } from "react-icons/md";
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function ElementSelection() {
+  const buildContext = useContext(BuildContext);
+  if (!buildContext) return <></>;
   const elements = ["Text", "Image", "Video"];
 
   return (
-    <div className="absolute min-h-12 min-w-12 p-1 rounded-lg bg-card -left-[5rem] -top-0 flex flex-col gap-1">
+    <div
+      onMouseDown={() => {
+        buildContext.focus.onBlur();
+      }}
+      className="absolute z-30 min-h-12 min-w-12 p-1 rounded-lg bg-card -left-[5rem] -top-0 flex flex-col gap-1"
+    >
       {elements.map((element: string, index: number) => {
         return <Element element={element} key={index} />;
       })}

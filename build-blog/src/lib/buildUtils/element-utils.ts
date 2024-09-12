@@ -91,7 +91,7 @@ export function insertNewElement(
 ) {
   // generate new unique id
   const uniqueId = nanoid(10);
-  const elementId = uniqueId + type;
+  const elementId = uniqueId + "-" + type;
 
   const newElement = { id: elementId, component: type, content: "" };
 
