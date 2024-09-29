@@ -85,7 +85,7 @@ export function swapOrder(
 
 //insert elements
 export function insertNewElement(
-  type: string,
+  type: "Text" | "Image" | "Video" | "Other",
   insertIndex: number,
   elementList: JsxElementList[]
 ) {
@@ -102,4 +102,10 @@ export function insertNewElement(
   ];
 
   return newArray;
+}
+
+export function removeElement(id: string, elementList: JsxElementList[]) {
+  // find index
+  const newElementList = elementList.filter((element) => element.id !== id);
+  return newElementList;
 }

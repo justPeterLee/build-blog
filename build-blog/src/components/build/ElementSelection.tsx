@@ -17,7 +17,7 @@ import { FaCheckCircle } from "react-icons/fa";
 export default function ElementSelection() {
   const buildContext = useContext(BuildContext);
   if (!buildContext) return <></>;
-  const elements = ["Text", "Image", "Video"];
+  const elements: ["Text", "Image", "Video"] = ["Text", "Image", "Video"];
 
   return (
     <div
@@ -26,9 +26,11 @@ export default function ElementSelection() {
       }}
       className="absolute z-30 min-h-12 min-w-12 p-1 rounded-lg bg-card -left-[5rem] -top-0 flex flex-col gap-1"
     >
-      {elements.map((element: string, index: number) => {
-        return <Element element={element} key={index} />;
-      })}
+      {elements.map(
+        (element: "Text" | "Image" | "Video" | "Other", index: number) => {
+          return <Element element={element} key={index} />;
+        }
+      )}
     </div>
   );
 }
@@ -48,7 +50,7 @@ function Element({
   element,
 }: //   update,
 {
-  element: string;
+  element: "Text" | "Image" | "Video" | "Other";
 }) {
   const buildContext = useContext(BuildContext);
   const elementSelectionContext = useContext(ElementSelectionContext);
@@ -212,8 +214,8 @@ function Element({
     }
   });
   return (
-    <div className="bg-code-card rounded-lg h-10  relative">
-      <div className="flex flex-col justify-center items-center h-full text-primary-text select-none">
+    <div className="bg-code-card rounded-lg h-10  relative duration-0">
+      <div className="flex flex-col justify-center items-center h-full text-primary-text select-none duration-0">
         {element === "Text" ? (
           <LuTextCursor color="text-primary-text" className="duration-0" />
         ) : element === "Image" ? (
@@ -230,14 +232,14 @@ function Element({
           "bg-code-card rounded-lg h-10 w-10 hover:cursor-grab absolute  top-0 touch-none duration-0 select-none"
         }
       >
-        <div className="w-full h-full relative ">
+        <div className="w-full h-full relative duration-0">
           <div className="flex flex-col justify-center items-center h-full text-primary-text select-none duration-0">
             {element === "Text" ? (
-              <LuTextCursor color="text-primary-text" />
+              <LuTextCursor color="text-primary-text" className="duration-0" />
             ) : element === "Image" ? (
-              <FaImage color="text-primary-text" />
+              <FaImage color="text-primary-text" className="duration-0" />
             ) : (
-              <FaVideo color="text-primary-text" />
+              <FaVideo color="text-primary-text " className="duration-0" />
             )}
           </div>
           <animated.div

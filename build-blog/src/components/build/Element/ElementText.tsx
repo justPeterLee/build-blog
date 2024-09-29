@@ -3,6 +3,7 @@ import { MarkdownRender } from "@/components/blog/MarkdownRender";
 import { useContext, useEffect, useRef, useState } from "react";
 import { BuildContext } from "../buildContext/BuildContext";
 import { ElementSelectionContext } from "../buildContext/ElementSelectorContext";
+import { CodeInput } from "@/components/pageComponents/buildComponents/code/CodeSnippet";
 
 export function ElementText({
   content,
@@ -66,7 +67,7 @@ export function ElementText({
           pointerEvents:
             buildContext.focus.value()?.id === id && focus ? "auto" : "none",
         }}
-        className="resize-none bg-transparent  w-full pointer-events-none"
+        className="resize-none bg-transparent  w-full pointer-events-none outline-none"
         placeholder="add text"
         value={contentState}
         onChange={(e) => {
@@ -81,7 +82,8 @@ export function ElementText({
           setStopMovement(false);
         }}
       />
-      <MarkdownRender build={true}>{contentState}</MarkdownRender>
+      {/* <CodeInput /> */}
+      {/* <MarkdownRender build={true}>{contentState}</MarkdownRender> */}
       {/* {focus && <p>{focus.id}</p>} */}
       {/* <p>{buildContext.focus.value()?.id}</p> */}
     </>

@@ -1,6 +1,7 @@
 import {
   getViewPortHeight,
   insertNewElement,
+  removeElement,
   setAnimationElement,
   swapOrder,
 } from "@/lib/buildUtils/element-utils";
@@ -10,7 +11,11 @@ import { createContext, ReactNode, useEffect, useRef, useState } from "react";
 export type ElementSpringType = SpringRef<SpringType>;
 export type ModeType = "point" | "drag" | "active";
 interface BuildContextType {
-  addElement: (type: string, insertIndex: number) => void;
+  addElement: (
+    type: "Text" | "Image" | "Video" | "Other",
+    insertIndex: number
+  ) => void;
+  deleteElement: (id: string) => void;
   getElementList: (type: "ref" | "state") => JsxElementList[];
   viewPortSpring: {
     scaleY: SpringValue<number>;
@@ -52,13 +57,13 @@ export interface ElementSpringObj {
 export function BuildContextProvider({ children }: { children: ReactNode }) {
   const elementListRef = useRef<JsxElementList[]>([
     { id: "insert-here", component: "Other", content: "" },
-    {
-      id: "unique-id",
-      component: "Text",
-      content: "",
-    },
-    { id: "unique-id2", component: "Text", content: "text 2" },
-    { id: "unique-id3", component: "Video", content: "" },
+    // {
+    //   id: "unique-id",
+    //   component: "Text",
+    //   content: "",
+    // },
+    // { id: "unique-id2", component: "Text", content: "text 2" },
+    // { id: "unique-id3", component: "Video", content: "" },
   ]);
 
   const [elementListState, setElementListState] = useState<JsxElementList[]>(
@@ -94,8 +99,6 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
     );
     if (currentIndex < 0) return elementListRef.current;
 
-    if (currentIndex === newIndex) return;
-
     elementListRef.current = swapOrder(
       elementListRef.current,
       currentIndex,
@@ -128,7 +131,10 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
   };
 
   // add element
-  const addElement = (type: string, insertIndex: number) => {
+  const addElement = (
+    type: "Text" | "Image" | "Video" | "Other",
+    insertIndex: number
+  ) => {
     // cause a rerender
     // update ref
     elementListRef.current = insertNewElement(
@@ -141,6 +147,10 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
     setElementListState(() => elementListRef.current);
   };
 
+  const deleteElement = (id: string) => {
+    elementListRef.current = removeElement(id, elementListRef.current);
+    setElementListState(() => elementListRef.current);
+  };
   const addSpringInstance = (
     id: string,
     spring: ElementSpringType,
@@ -198,6 +208,7 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
     <BuildContext.Provider
       value={{
         addElement,
+        deleteElement,
         getElementList,
         viewPortSpring,
         initialRender,
