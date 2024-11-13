@@ -37,7 +37,7 @@ function JsxViewPort() {
     return <>failed to loads</>;
 
   useEffect(() => {
-    console.log(buildContext.getElementContent("state"));
+    // console.log(buildContext.getElementContent("state"));
     buildContext.initialRender();
     elementSelectionContext.function.updateZones(
       buildContext.getElementList("ref")
@@ -98,7 +98,7 @@ export function FocusBackdrop() {
       className="fixed top-0 h-screen w-full z-10 "
       onClick={() => {
         buildContext.focus.onBlur();
-        console.log("blura");
+        // console.log("blura");
       }}
     ></div>
   );
