@@ -85,14 +85,11 @@ export function swapOrder(
 
 //insert elements
 export function insertNewElement(
+  elementId: string,
   type: "Text" | "Image" | "Video" | "Other",
   insertIndex: number,
   elementList: JsxElementList[]
 ) {
-  // generate new unique id
-  const uniqueId = nanoid(10);
-  const elementId = uniqueId + "-" + type;
-
   const newElement = { id: elementId, component: type, content: "" };
 
   const newArray: JsxElementList[] = [

@@ -5,26 +5,7 @@ import { useDrag } from "@use-gesture/react";
 import { ElementSelectionContext } from "../buildContext/ElementSelectorContext";
 import { initialNewRender, insertElement } from "@/lib/buildUtils/build-utils";
 import { ElementText } from "./ElementText";
-
-export function VideoElement({
-  id,
-  style,
-  order,
-}: {
-  id: string;
-  style: any;
-  order: number;
-}) {
-  return (
-    <animated.div
-      style={style}
-      id={id}
-      className="bg-card w-full h-32 rounded-xl p-2 shadow absolute"
-    >
-      <p className="text-secondary-text">Video Element {order}</p>
-    </animated.div>
-  );
-}
+import { ElementContent } from "./ElementContent";
 
 export function InsertHereLine({
   addSpring,
@@ -271,7 +252,7 @@ export function AnimationElement({
         ),
       }}
       id={elementData.id}
-      className="bg-card w-full rounded-xl p-2 absolute touch-none hover:cursor-pointer"
+      className="bg-code-card w-full rounded-xl p-2 absolute touch-none hover:cursor-pointer"
       onClick={() => {
         focusRef.current = false;
 
@@ -296,7 +277,12 @@ export function AnimationElement({
 
       // onMouseUp={()=>{}}
     >
-      {elementData.component === "Text" ? (
+      <ElementContent
+        type={elementData.component}
+        content={elementData.content}
+        id={elementData.id}
+      />
+      {/* {elementData.component === "Text" ? (
         <ElementText
           focus={currentFocus}
           content={elementData.content}
@@ -311,7 +297,7 @@ export function AnimationElement({
         <p>image tag</p>
       ) : (
         <p>video tag</p>
-      )}
+      )} */}
     </animated.div>
   );
 }

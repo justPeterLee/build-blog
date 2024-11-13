@@ -37,11 +37,15 @@ function JsxViewPort() {
     return <>failed to loads</>;
 
   useEffect(() => {
+    console.log(buildContext.getElementContent("state"));
     buildContext.initialRender();
     elementSelectionContext.function.updateZones(
       buildContext.getElementList("ref")
     );
-  }, [buildContext.getElementList("state")]);
+  }, [
+    buildContext.getElementList("state"),
+    buildContext.getElementContent("state"),
+  ]);
 
   return (
     <>

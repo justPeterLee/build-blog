@@ -24,10 +24,13 @@ export function ElementText({
   const elementSelectionContext = useContext(ElementSelectionContext);
 
   if (!buildContext || !elementSelectionContext) return <></>;
+
   const parentRef = useRef<HTMLElement | null>(null);
   const element = useRef<HTMLTextAreaElement | null>(null);
   const height = useRef<number | null>(null);
   const [contentState, setContentState] = useState(content);
+
+  // setting default values
   useEffect(() => {
     if (element.current) {
       const parent = element.current.parentElement;
@@ -38,12 +41,11 @@ export function ElementText({
     }
   }, []);
 
+  // update viewport (size) if text bubble size has change -> on text change
   useEffect(() => {
     if (parentRef.current) {
       if (parentRef.current.getBoundingClientRect().height !== height.current) {
         height.current = parentRef.current.getBoundingClientRect().height;
-        console.log("test");
-        // console.log(initialRender);
         initialRender();
         elementSelectionContext.function.updateZones(
           buildContext!.getElementList("ref")
@@ -51,22 +53,11 @@ export function ElementText({
       }
     }
   }, [contentState]);
+
   return (
     <>
       <textarea
         ref={element}
-        // style={{
-        //   cursor:
-        //     buildContext.getMode() === "point"
-        //       ? "pointer"
-        //       : buildContext.getMode() === "drag"
-        //       ? "grabbing"
-        //       : "default",
-        // }}
-        style={{
-          pointerEvents:
-            buildContext.focus.value()?.id === id && focus ? "auto" : "none",
-        }}
         className="resize-none bg-transparent  w-full pointer-events-none outline-none"
         placeholder="add text"
         value={contentState}
@@ -74,18 +65,14 @@ export function ElementText({
           console.log("change");
           setContentState(e.target.value);
         }}
-        onFocus={() => {
-          setStopMovement(true);
-        }}
-        onBlur={() => {
-          console.log("stop");
-          setStopMovement(false);
-        }}
+        // onFocus={() => {
+        //   setStopMovement(true);
+        // }}
+        // onBlur={() => {
+        //   console.log("stop");
+        //   setStopMovement(false);
+        // }}
       />
-      {/* <CodeInput /> */}
-      {/* <MarkdownRender build={true}>{contentState}</MarkdownRender> */}
-      {/* {focus && <p>{focus.id}</p>} */}
-      {/* <p>{buildContext.focus.value()?.id}</p> */}
     </>
   );
 }
