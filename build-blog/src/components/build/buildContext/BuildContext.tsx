@@ -39,6 +39,11 @@ interface BuildContextType {
 
   getElementContent: (type: "ref" | "state") => ElementContentObj;
 
+  getElementValues: (id: string) => {
+    type: "Text" | "Image" | "Video" | "Other";
+    content: string | File | null;
+  } | null;
+
   updateElementContent: (
     id: string,
     content: string | File | null
@@ -132,6 +137,11 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
     } else {
       return {};
     }
+  };
+
+  const getElementValues = (id: string) => {
+    if (!elementContentRef.current[id]) return null;
+    return elementContentRef.current[id];
   };
   // ================ setter functions ===================
 
@@ -248,6 +258,8 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
         return { status: false, error: "unable to identify element" };
 
       console.log(typeof content);
+      console.log(content);
+      console.log(id);
       if (
         elementContentRef.current[id].type === "Text" &&
         typeof content !== "string" &&
@@ -318,6 +330,7 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
         deleteElement,
         getElementList,
         getElementContent,
+        getElementValues,
         updateElementContent,
         viewPortSpring,
         initialRender,

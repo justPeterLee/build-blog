@@ -1,13 +1,16 @@
 import { Modal } from "@/components/modal/modalTemplate";
 import { useContext, useState } from "react";
 import { BuildContext } from "../../buildContext/BuildContext";
+import { TextEdit } from "./TextEdit";
 
 export default function EditModal({
   content,
+  values,
   onClose,
   editElement,
 }: {
   content: any;
+  values: { type: string };
   onClose: () => void;
   editElement: (newContent: any) => {
     status: boolean;
@@ -42,23 +45,27 @@ export default function EditModal({
   };
   return (
     <Modal onClose={editUnsavedContent}>
-      <div className="text-primary-text">edit</div>
-      <p>{contentValue}</p>
-      <div className="flex  gap-3">
-        <button
-          className="text-tertiary-text hover:text-secondary-text hover:underline"
-          onClick={editUnsavedContent}
-        >
-          cancel
-        </button>
-        <button
-          className="bg-cta-card text-secondary-text px-2 rounded"
-          onClick={() => {
-            editElementErrorCheck(contentValue);
-          }}
-        >
-          update
-        </button>
+      <div id="edit-modal-content">
+        <EditModalContent type={values.type} />
+      </div>
+      <div id="edit-modal-action">
+        <p>{contentValue}</p>
+        <div className="flex  gap-3">
+          <button
+            className="text-tertiary-text hover:text-secondary-text hover:underline"
+            onClick={editUnsavedContent}
+          >
+            cancel
+          </button>
+          <button
+            className="bg-cta-card text-secondary-text px-2 rounded"
+            onClick={() => {
+              editElementErrorCheck(contentValue);
+            }}
+          >
+            update
+          </button>
+        </div>
       </div>
 
       {/* <p>{JSON.stringify(contentValue)}</p> */}
@@ -93,5 +100,19 @@ function UnsavedContent({
         delete changes
       </button>
     </Modal>
+  );
+}
+
+function EditModalContent({ type }: { type: elementTypes | string }) {
+  const EditModalContentType = () => {
+    if (type === "Text") return <TextEdit />;
+    if (type === "Image") return <>image</>;
+    if (type === "Video") return <>video</>;
+    return <>null</>;
+  };
+  return (
+    <>
+      <div>{EditModalContentType()}</div>
+    </>
   );
 }

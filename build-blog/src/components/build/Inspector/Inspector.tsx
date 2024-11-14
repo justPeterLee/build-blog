@@ -11,6 +11,9 @@ export function Inspector() {
   if (!buildContext) return <></>;
   if (!buildContext.focus.value()) return <></>;
 
+  const elementId = buildContext.focus.value()!.id;
+  const elementValues = buildContext.getElementValues(elementId);
+
   const editElement = (newContent: any) => {
     return buildContext.updateElementContent(
       buildContext.focus.value()!.id,
@@ -23,11 +26,13 @@ export function Inspector() {
       <div className="bg-card w-[12rem] z-30 absolute -right-[1rem] translate-x-[110%] -top-[1rem] rounded-lg p-2 flex flex-col gap-2">
         <span className="flex flex-col">
           <p className="text-sm text-tertiary-text">component id:</p>
-          <p className="text-primary-text">{buildContext.focus.value()!.id}</p>
+          <p className="text-primary-text">{elementId}</p>
         </span>
         <span>
           <p className="text-sm text-tertiary-text">type:</p>
-          <p className="text-primary-text">text</p>
+          <p className="text-primary-text">
+            {elementValues ? elementValues.type : "null"}
+          </p>
         </span>
 
         <span className="flex flex-col text-primary-text duration-0 gap-2">
@@ -89,13 +94,14 @@ export function Inspector() {
         </Modal>
       )}
 
-      {showEditModal && (
+      {showEditModal && elementValues && (
         <EditModal
           content={
             buildContext.getElementContent("state")[
               buildContext.focus.value()!.id
             ].content
           }
+          values={elementValues}
           onClose={() => {
             setShowEditModal(false);
           }}
