@@ -27,6 +27,7 @@ export function MarkdownRender({
         wrapper: !build ? ArticleWrap : BuildWrap,
         forceWrapper: true,
         overrides: {
+          p: { props: { class: "post-p" } },
           BlogImage: {
             component: BlogImage,
           },
@@ -40,6 +41,24 @@ export function MarkdownRender({
       }}
     >
       {children}
+    </Markdown>
+  );
+}
+
+export function TextOnlyRender({ children }: { children: string }) {
+  return (
+    <Markdown
+      options={{
+        wrapper: ArticleWrap,
+        forceWrapper: true,
+        overrides: {
+          p: {
+            props: { class: "text-editor" },
+          },
+        },
+      }}
+    >
+      {`<p> ${children} </p>`}
     </Markdown>
   );
 }

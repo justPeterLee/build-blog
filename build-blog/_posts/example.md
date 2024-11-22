@@ -16,6 +16,7 @@ However, the WH-1000XM3s are huge and can't be carried around easily. This made 
 
 In this blog post, I will be talking about my overall experience with Apple's AirPods Pro. The following list is ordered by importance to me.
 
+<p>test bock</p>
 <BlogImage image='tony.jpg' folder="example" subTitle="Tony Tony Chopper, doctor of the straw hat pirates" reference="https://www.google.com"/>
 
 <!-- <BlogCode language="jsx" file="components/code.tsx"> -->

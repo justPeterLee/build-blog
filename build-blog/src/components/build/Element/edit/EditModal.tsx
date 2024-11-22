@@ -1,5 +1,5 @@
 import { Modal } from "@/components/modal/modalTemplate";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BuildContext } from "../../buildContext/BuildContext";
 import { TextEdit } from "./TextEdit";
 
@@ -43,13 +43,24 @@ export default function EditModal({
       onClose();
     }
   };
+
+  const updateContentValueState = (newContentState: any) => {
+    setContentValue(newContentState);
+  };
+
+  useEffect(() => {
+    console.log("test");
+  }, []);
   return (
     <Modal onClose={editUnsavedContent}>
       <div id="edit-modal-content">
-        <EditModalContent type={values.type} />
+        <EditModalContent
+          type={values.type}
+          contentState={contentValue}
+          updateContentValueState={updateContentValueState}
+        />
       </div>
-      <div id="edit-modal-action">
-        <p>{contentValue}</p>
+      <div id="edit-modal-action" className="mt-4 flex justify-end">
         <div className="flex  gap-3">
           <button
             className="text-tertiary-text hover:text-secondary-text hover:underline"
@@ -103,9 +114,23 @@ function UnsavedContent({
   );
 }
 
-function EditModalContent({ type }: { type: elementTypes | string }) {
+function EditModalContent({
+  type,
+  contentState,
+  updateContentValueState,
+}: {
+  type: elementTypes | string;
+  contentState: any;
+  updateContentValueState: (newContentValueState: any) => void;
+}) {
   const EditModalContentType = () => {
-    if (type === "Text") return <TextEdit />;
+    if (type === "Text")
+      return (
+        <TextEdit
+          content={contentState}
+          updateContentValueState={updateContentValueState}
+        />
+      );
     if (type === "Image") return <>image</>;
     if (type === "Video") return <>video</>;
     return <>null</>;

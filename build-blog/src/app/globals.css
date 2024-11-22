@@ -96,6 +96,11 @@
 .post h4 {
   @apply text-sm text-tertiary-text font-semibold mb-5;
 }
-.post p {
+
+.post-p {
   @apply bg-card p-4 rounded-lg text-secondary-text my-4;
+}
+
+.text-editor {
+  @apply bg-white p-4 rounded-lg text-secondary-text my-2 border;
 }
