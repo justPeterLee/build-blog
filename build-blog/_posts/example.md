@@ -19,7 +19,7 @@ In this blog post, I will be talking about my overall experience with Apple's Ai
 <p>test bock</p>
 <BlogImage image='tony.jpg' folder="example" subTitle="Tony Tony Chopper, doctor of the straw hat pirates" reference="https://www.google.com"/>
 
-```jsx file="components/code"
+```js file="components/code" language="jsx"
 export default function BlogCode({
   children,
   language,
@@ -34,6 +34,23 @@ export default function BlogCode({
   );
 }
 ```
+
+<!-- <p>"<code></code>"</p> -->
+<code language="jsx" className="test" file="components/code">
+  export default function BlogCode({
+    children,
+    language,
+  }: {
+    code: string,
+    language: string,
+  }) {
+    return (
+      &lt;SyntaxHighlighter language={language} style={darcula}&gt;
+        {children}
+      &lt;/SyntaxHighlighter&gt;
+    );
+}
+</code>
 
 <BlogVideo folder="example" video="1MinTimer.mp4"
 subTitle="1 min timer"

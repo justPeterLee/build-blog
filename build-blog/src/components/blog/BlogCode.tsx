@@ -14,6 +14,7 @@ export default function BlogCode(props: {
   className: string;
   children: string;
   file?: string;
+  language?: string;
 }) {
   const [isCopy, setIsCopy] = useState(false);
   return (
@@ -33,9 +34,11 @@ export default function BlogCode(props: {
           {!isCopy ? "copy" : "copied"}
         </button>
       </header>
-      {/* <p>{language}</p> */}
+      {/* <p>{props.className.split("-")[1]}</p> */}
+      <p>{props.className}</p>
+      <p>{props.language}</p>
       <SyntaxHighlighter
-        language={props.className.split("-")[1]}
+        language={"jsx"}
         style={darcula}
         customStyle={{ margin: "0" }}
         className={"rounded-lg m-0"}
