@@ -36,7 +36,7 @@ export default function BlogCode({
 ```
 
 <!-- <p>"<code></code>"</p> -->
-<code language="jsx" className="test" file="components/code">
+<!-- <code language="jsx" className="test" file="components/code">
   export default function BlogCode({
     children,
     language,
@@ -50,7 +50,7 @@ export default function BlogCode({
       &lt;/SyntaxHighlighter&gt;
     );
 }
-</code>
+</code> -->
 
 <BlogVideo folder="example" video="1MinTimer.mp4"
 subTitle="1 min timer"
