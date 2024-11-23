@@ -101,6 +101,10 @@
   @apply bg-card p-4 rounded-lg text-secondary-text my-4;
 }
 
+.viewport-element {
+  @apply bg-card p-4 rounded-lg text-secondary-text max-w-[42rem] w-full;
+}
+
 .text-editor {
   @apply bg-white p-4 rounded-lg text-secondary-text my-2 border;
 }

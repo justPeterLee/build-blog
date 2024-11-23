@@ -252,7 +252,7 @@ export function AnimationElement({
         ),
       }}
       id={elementData.id}
-      className="bg-code-card w-full rounded-xl p-2 absolute touch-none hover:cursor-pointer"
+      className="viewport-element absolute touch-none hover:cursor-pointer"
       onClick={() => {
         focusRef.current = false;
 

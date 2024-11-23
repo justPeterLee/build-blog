@@ -20,7 +20,7 @@ export default function ViewPort() {
     <BuildContextProvider>
       <ElementSelectionContextProvider>
         <FocusBackdrop />
-        <article className="w-[42rem] flex-grow flex flex-col justify-center items-center m-auto">
+        <article className="max-w-[45rem] flex-grow flex flex-col  m-auto">
           <div className="w-full relative">
             <JsxViewPort />
           </div>
@@ -52,7 +52,7 @@ function JsxViewPort() {
       <animated.div
         style={buildContext.viewPortSpring}
         id="viewPort-view"
-        className="w-full h-[10rem] absolute origin-top rounded bg-cta-active"
+        className="w-full h-[10rem] absolute origin-top bg-cta-active"
       ></animated.div>
       <div
         id="jsxViewPort"
@@ -63,7 +63,7 @@ function JsxViewPort() {
 
           <animated.div
             id="viewPort"
-            className="w-full h-[10rem] flex flex-col gap-3 origin-top"
+            className="w-full h-[10rem] flex flex-col  items-center gap-3 origin-top"
           >
             {buildContext.getElementList("state").map((element, index) => {
               if (element.id === "insert-here")

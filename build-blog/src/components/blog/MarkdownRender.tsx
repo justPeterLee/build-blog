@@ -27,7 +27,7 @@ export function MarkdownRender({
         wrapper: !build ? ArticleWrap : BuildWrap,
         forceWrapper: true,
         overrides: {
-          p: { props: { class: "post-p" } },
+          p: { props: { className: "post-p" } },
           BlogImage: {
             component: BlogImage,
           },
@@ -53,7 +53,7 @@ export function TextOnlyRender({ children }: { children: string }) {
         forceWrapper: true,
         overrides: {
           p: {
-            props: { class: "text-editor" },
+            props: { className: "text-editor" },
           },
         },
       }}

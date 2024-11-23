@@ -12,6 +12,7 @@ export function ElementContent({
   id: string;
 }) {
   const buildContext = useContext(BuildContext);
+  if (!buildContext) return <></>;
   //   const elementSelectionContext = useContext(ElementSelectionContext);
 
   //   if (!buildContext || !elementSelectionContext) return <></>;
@@ -51,18 +52,30 @@ export function ElementContent({
 
   return (
     <div>
-      {type === "Text" && <TextElement content={content} />}
+      {/* <p>{id}</p>
       <p>
-        {JSON.stringify(buildContext?.getElementContent("state")[id].content)}
-      </p>
+        {JSON.stringify(buildContext.getElementContent("state")[id].content)}
+      </p> */}
+      {type === "Text" && (
+        <TextElement
+          content={
+            buildContext.getElementContent("state")[id].content as string | null
+          }
+        />
+      )}
+      {/* <p>
+        {JSON.stringify(buildContext.getElementContent("state")[id].content)}
+      </p> */}
     </div>
   );
 }
 
-export function TextElement({ content }: { content: string }) {
+export function TextElement({ content }: { content: string | null }) {
+  if (content === null)
+    return <p className="text-tertiary-text">add text...</p>;
   if (!content.replace(/\s/g, "")) {
     return <p className="text-tertiary-text">add text</p>;
   }
 
-  return <p className="text-primary-text">content</p>;
+  return <p className="text-secondary-text">{content}</p>;
 }
