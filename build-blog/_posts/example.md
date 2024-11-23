@@ -29,6 +29,7 @@ export default function BlogCode({
 }) {
   return (
     <SyntaxHighlighter language={language} style={darcula}>
+      <p>not block</p>
       {children}
     </SyntaxHighlighter>
   );
