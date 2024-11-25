@@ -5,6 +5,7 @@ import bash from "react-syntax-highlighter/dist/esm/languages/prism/bash";
 import md from "react-syntax-highlighter/dist/esm/languages/prism/markdown";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useState } from "react";
+import { GoCopy } from "react-icons/go";
 
 SyntaxHighlighter.registerLanguage("jsx", jsx);
 SyntaxHighlighter.registerLanguage("bash", bash);
@@ -21,8 +22,11 @@ export default function BlogCode(props: {
     <section className="flex flex-col gap-0">
       <header className="flex justify-between text-secondary-text text-sm">
         {props.file}
+      </header>
+
+      <div className="relative">
         <button
-          className="text-secondary-text"
+          className="text-tertiary-text absolute right-0 p-2 m-2  rounded-lg hover:bg-zinc-700"
           onClick={async () => {
             await navigator.clipboard.writeText(props.children);
             setIsCopy(true);
@@ -31,20 +35,17 @@ export default function BlogCode(props: {
             }, 750);
           }}
         >
-          {!isCopy ? "copy" : "copied"}
+          {!isCopy ? <GoCopy size={20} /> : "copied"}
         </button>
-      </header>
-      {/* <p>{props.className.split("-")[1]}</p> */}
-      <p>{props.className}</p>
-      <p>{props.language}</p>
-      <SyntaxHighlighter
-        language={"jsx"}
-        style={darcula}
-        customStyle={{ margin: "0" }}
-        className={"rounded-lg m-0"}
-      >
-        {props.children}
-      </SyntaxHighlighter>
+        <SyntaxHighlighter
+          language={"jsx"}
+          style={darcula}
+          customStyle={{ margin: "0" }}
+          className={"rounded-lg m-0"}
+        >
+          {props.children}
+        </SyntaxHighlighter>
+      </div>
     </section>
   );
 }

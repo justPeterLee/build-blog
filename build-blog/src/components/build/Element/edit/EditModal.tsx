@@ -2,6 +2,7 @@ import { Modal } from "@/components/modal/modalTemplate";
 import { useContext, useEffect, useState } from "react";
 import { BuildContext } from "../../buildContext/BuildContext";
 import { TextEdit } from "./TextEdit";
+import { ImageEdit } from "./ImageEdit";
 
 export default function EditModal({
   content,
@@ -131,7 +132,7 @@ function EditModalContent({
           updateContentValueState={updateContentValueState}
         />
       );
-    if (type === "Image") return <>image</>;
+    if (type === "Image") return <ImageEdit />;
     if (type === "Video") return <>video</>;
     return <>null</>;
   };

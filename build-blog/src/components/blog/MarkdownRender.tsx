@@ -3,6 +3,7 @@ import { Fragment, ReactNode } from "react";
 import { BlogImage } from "./BlogImage";
 import BlogCode from "./BlogCode";
 import BlogVideo from "./BlogVideo";
+import { BlogText } from "./BlogText";
 type MarkdownOverride = { children: ReactNode; props: any };
 
 const ArticleWrap = ({ children, ...props }: MarkdownOverride) => (
@@ -27,7 +28,7 @@ export function MarkdownRender({
         wrapper: !build ? ArticleWrap : BuildWrap,
         forceWrapper: true,
         overrides: {
-          p: { props: { className: "post-p" } },
+          p: { component: BlogText },
           BlogImage: {
             component: BlogImage,
           },

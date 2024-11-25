@@ -63,6 +63,7 @@ export function ElementContent({
           }
         />
       )}
+      {type === "Image" && <ImageElement content={null} />}
       {/* <p>
         {JSON.stringify(buildContext.getElementContent("state")[id].content)}
       </p> */}
@@ -78,4 +79,43 @@ export function TextElement({ content }: { content: string | null }) {
   }
 
   return <p className="text-secondary-text">{content}</p>;
+}
+
+function ImageElement({
+  content,
+}: {
+  content: {
+    file: File;
+    alt: string;
+    height?: number;
+    width?: number;
+    subTitle?: string;
+    reference?: string;
+  } | null;
+}) {
+  if (content === null)
+    return <p className="text-tertiary-text">add image...</p>;
+
+  const imageUrl = URL.createObjectURL(content.file);
+  return (
+    <div>
+      <img
+        src={imageUrl}
+        alt={content.alt}
+        className="w-auto h-auto max-w-[42rem] min-w-80 rounded-lg shadow hover:cursor-pointer"
+        style={{
+          width: content.width ? content.width : "",
+          height: content.height ? content.height : "",
+        }}
+      />
+      <div className="mt-1 text-xs text-secondary-text duration-0 flex justify-between">
+        <span className="text-xs text-secondary-text">{content.subTitle}</span>
+        {content.reference && (
+          <a href={content.reference} target="_blank">
+            ref
+          </a>
+        )}
+      </div>
+    </div>
+  );
 }
