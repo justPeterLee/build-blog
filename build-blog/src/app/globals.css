@@ -32,6 +32,9 @@
   --cta-card: 220 220 220;
   --cta-active-card: 200 200 200;
 
+  --text-box: 255 255 255;
+  --text-box-active: 0 0 0;
+
   --primary-text: 38, 38, 38;
   --secondary-text: 100, 100, 100;
   --tertiary-text: 160, 160, 160;
@@ -55,6 +58,9 @@
   --cta-active: 65, 65, 65;
   --cta-card: 55, 55, 55;
   --cta-active-card: 65, 65, 65;
+
+  --text-box: 50, 50, 50;
+  --text-box-active: 45 45 45;
 
   --primary-text: 222, 222, 222;
   --secondary-text: 150, 150, 150;

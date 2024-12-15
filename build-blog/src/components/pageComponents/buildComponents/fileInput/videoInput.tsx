@@ -208,7 +208,7 @@ export function VideoPlayer({
   if (typeof file !== "string") {
     return (
       <div className="flex-col bg-card rounded-xl flex justify-center items-center gap-5 shadow p-5">
-        <FileList file={file} onClear={onClear} />
+        {/* <FileList file={file} onClear={onClear} /> */}
         <div draggable={false} onDragStart={(e) => e.preventDefault()}>
           <video width="100%" height="auto" controls preload="none">
             <source src={URL.createObjectURL(file)} type={file.type}></source>

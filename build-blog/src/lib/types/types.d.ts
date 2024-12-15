@@ -38,3 +38,27 @@ declare module "lodash-move" {
 }
 
 type elementTypes = "Text" | "Image" | "Video" | "Other";
+
+interface ImageFileOrder {
+  id: string;
+  file: File;
+  subtitle: string;
+  reference: string;
+}
+
+interface ImageFile {
+  order: number;
+  file: File;
+  subtitle: string;
+  reference: string;
+}
+
+interface ImagesFileObj {
+  [id: string]: ImageFile;
+}
+interface ImagesFileOrderObj {
+  [order: number]: ImageOrderedFile;
+}
+
+type TextContent = string | null;
+type ImageContent = ImagesFileObj | null;

@@ -5,6 +5,7 @@ import {
   setAnimationElement,
   swapOrder,
 } from "@/lib/buildUtils/element-utils";
+import { validContentElementType } from "@/lib/utils";
 import { SpringRef, SpringValue, useSpring } from "@react-spring/web";
 import { nanoid } from "nanoid";
 import { createContext, ReactNode, useRef, useState } from "react";
@@ -23,7 +24,7 @@ export interface ElementSpringObj {
 export interface ElementContentObj {
   [id: string]: {
     type: "Text" | "Image" | "Video" | "Other";
-    content: string | File | null;
+    content: TextContent | ImageContent | null;
   };
 }
 
@@ -41,12 +42,12 @@ interface BuildContextType {
 
   getElementValues: (id: string) => {
     type: "Text" | "Image" | "Video" | "Other";
-    content: string | File | null;
+    content: TextContent | ImageContent | null;
   } | null;
 
   updateElementContent: (
     id: string,
-    content: string | File | null
+    content: TextContent | ImageContent
   ) => {
     status: boolean;
     error: string;
@@ -252,25 +253,29 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
 
   /* update element's content
    */
-  const updateElementContent = (id: string, content: string | File | null) => {
+  const updateElementContent = (
+    id: string,
+    content: TextContent | ImageContent | null
+  ) => {
     try {
+      // check to see element exists
       if (!elementContentRef.current[id])
         return { status: false, error: "unable to identify element" };
 
       console.log(typeof content);
       console.log(content);
       console.log(id);
-      if (
-        elementContentRef.current[id].type === "Text" &&
-        typeof content !== "string" &&
-        content !== null
-      )
+
+      // check to see if content is correct with type
+      if (!validContentElementType(elementContentRef.current[id].type, content))
         return { status: false, error: "wrong content type" };
 
       elementContentRef.current[id].content = content;
+
       setElementContentState(() => {
         return { ...elementContentRef.current };
       });
+
       return { status: true, error: "" };
     } catch (error) {
       return { status: false, error: "internal error" };

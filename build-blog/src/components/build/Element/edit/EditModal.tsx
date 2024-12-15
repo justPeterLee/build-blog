@@ -45,52 +45,56 @@ export default function EditModal({
     }
   };
 
-  const updateContentValueState = (newContentState: any) => {
+  const updateContentValueState = (
+    newContentState: TextContent | ImageContent
+  ) => {
     setContentValue(newContentState);
   };
 
-  useEffect(() => {
-    console.log("test");
-  }, []);
   return (
-    <Modal onClose={editUnsavedContent}>
-      <div id="edit-modal-content">
-        <EditModalContent
-          type={values.type}
-          contentState={contentValue}
-          updateContentValueState={updateContentValueState}
-        />
-      </div>
-      <div id="edit-modal-action" className="mt-4 flex justify-end">
-        <div className="flex  gap-3">
-          <button
-            className="text-tertiary-text hover:text-secondary-text hover:underline"
-            onClick={editUnsavedContent}
-          >
-            cancel
-          </button>
-          <button
-            className="bg-cta-card text-secondary-text px-2 rounded"
-            onClick={() => {
-              editElementErrorCheck(contentValue);
-            }}
-          >
-            update
-          </button>
+    <Modal
+      onClose={editUnsavedContent}
+      modalClassName="max-h-[90%] overflow-auto"
+    >
+      <div className="w-[42rem]">
+        <div id="edit-modal-content">
+          <EditModalContent
+            type={values.type}
+            contentState={contentValue}
+            updateContentValueState={updateContentValueState}
+          />
         </div>
+        <div id="edit-modal-action" className="mt-4 flex justify-end">
+          <div className="flex  gap-3">
+            <button
+              className="text-tertiary-text hover:text-secondary-text hover:underline"
+              onClick={editUnsavedContent}
+            >
+              cancel
+            </button>
+            <button
+              className="bg-cta-card text-secondary-text px-2 rounded"
+              onClick={() => {
+                editElementErrorCheck(contentValue);
+              }}
+            >
+              update
+            </button>
+          </div>
+        </div>
+
+        {/* <p>{JSON.stringify(contentValue)}</p> */}
+        {error && <p className="text-sm text-red-600">* {error.error}</p>}
+
+        {hasUnsavedContent && (
+          <UnsavedContent
+            onClose={() => {
+              setHasUnsavedContent(false);
+            }}
+            closeAll={onClose}
+          />
+        )}
       </div>
-
-      {/* <p>{JSON.stringify(contentValue)}</p> */}
-      {error && <p className="text-sm text-red-600">* {error.error}</p>}
-
-      {hasUnsavedContent && (
-        <UnsavedContent
-          onClose={() => {
-            setHasUnsavedContent(false);
-          }}
-          closeAll={onClose}
-        />
-      )}
     </Modal>
   );
 }
@@ -121,19 +125,31 @@ function EditModalContent({
   updateContentValueState,
 }: {
   type: elementTypes | string;
-  contentState: any;
+  contentState: TextContent | ImageContent;
   updateContentValueState: (newContentValueState: any) => void;
 }) {
   const EditModalContentType = () => {
-    if (type === "Text")
+    console.log(type, contentState, typeof contentState);
+    if (
+      type === "Text" &&
+      (typeof contentState === "string" || contentState === null)
+    ) {
       return (
         <TextEdit
           content={contentState}
           updateContentValueState={updateContentValueState}
         />
       );
-    if (type === "Image") return <ImageEdit />;
-    if (type === "Video") return <>video</>;
+    } else if (type === "Image" && typeof contentState === "object") {
+      return (
+        <ImageEdit
+          content={contentState}
+          updateContentValueState={updateContentValueState}
+        />
+      );
+    } else if (type === "Video" && typeof contentState === "object") {
+      return <>video</>;
+    }
     return <>null</>;
   };
   return (

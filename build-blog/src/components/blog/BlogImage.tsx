@@ -63,3 +63,7 @@ export function BlogImage({
     </>
   );
 }
+
+export function BlogImageCarousel({}: {}) {
+  return <></>;
+}

@@ -252,7 +252,7 @@ export function AnimationElement({
         ),
       }}
       id={elementData.id}
-      className="viewport-element absolute touch-none hover:cursor-pointer"
+      className="viewport-element absolute touch-none hover:cursor-pointer bg-card"
       onClick={() => {
         focusRef.current = false;
 
