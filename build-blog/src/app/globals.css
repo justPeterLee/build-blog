@@ -114,3 +114,7 @@
 .text-editor {
   @apply bg-white p-4 rounded-lg text-secondary-text my-2 border;
 }
+
+#text-editor-empty {
+  @apply bg-white p-4 rounded-lg text-tertiary-text  my-2 border;
+}

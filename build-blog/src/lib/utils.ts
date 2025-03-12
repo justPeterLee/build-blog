@@ -111,9 +111,9 @@ export function validVideo(file: File) {
     return error;
   }
   // valid size
-  if (file.size > 10 * 1024 * 1024) {
+  if (file.size > 1 * 1024 * 1024 * 1024) {
     error.error = true;
-    error.message = "File size exceeds the limit of 5 MB";
+    error.message = "File size exceeds the limit of 1 GB";
   }
 
   return error;
@@ -218,7 +218,7 @@ export function updateImageHeader(
 
 export function validContentElementType(
   type: elementTypes,
-  content: TextContent | ImageContent
+  content: AnyContentType
 ) {
   if (content === null) return false;
 

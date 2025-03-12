@@ -47,6 +47,9 @@ export function MarkdownRender({
 }
 
 export function TextOnlyRender({ children }: { children: string }) {
+  const validStringCheck = children
+    ? `<p> ${children} </p>`
+    : "<p id='text-editor-empty'> (empty text block) </p>";
   return (
     <Markdown
       options={{
@@ -59,7 +62,7 @@ export function TextOnlyRender({ children }: { children: string }) {
         },
       }}
     >
-      {`<p> ${children} </p>`}
+      {validStringCheck}
     </Markdown>
   );
 }

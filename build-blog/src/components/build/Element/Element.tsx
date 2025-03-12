@@ -4,7 +4,6 @@ import { BuildContext, ElementSpringType } from "../buildContext/BuildContext";
 import { useDrag } from "@use-gesture/react";
 import { ElementSelectionContext } from "../buildContext/ElementSelectorContext";
 import { initialNewRender, insertElement } from "@/lib/buildUtils/build-utils";
-import { ElementText } from "./ElementText";
 import { ElementContent } from "./ElementContent";
 
 export function InsertHereLine({

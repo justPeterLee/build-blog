@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { BuildContext } from "../../buildContext/BuildContext";
 import { TextEdit } from "./TextEdit";
 import { ImageEdit } from "./ImageEdit";
+import { VideoEdit } from "./VideoEdit";
 
 export default function EditModal({
   content,
@@ -10,8 +11,8 @@ export default function EditModal({
   onClose,
   editElement,
 }: {
-  content: any;
-  values: { type: string };
+  content: AnyContentType;
+  values: ValidContentValueTypes;
   onClose: () => void;
   editElement: (newContent: any) => {
     status: boolean;
@@ -45,9 +46,7 @@ export default function EditModal({
     }
   };
 
-  const updateContentValueState = (
-    newContentState: TextContent | ImageContent
-  ) => {
+  const updateContentValueState = (newContentState: AnyContentType) => {
     setContentValue(newContentState);
   };
 
@@ -59,7 +58,7 @@ export default function EditModal({
       <div className="w-[42rem]">
         <div id="edit-modal-content">
           <EditModalContent
-            type={values.type}
+            values={values}
             contentState={contentValue}
             updateContentValueState={updateContentValueState}
           />
@@ -120,37 +119,45 @@ function UnsavedContent({
 }
 
 function EditModalContent({
-  type,
+  values,
   contentState,
   updateContentValueState,
 }: {
-  type: elementTypes | string;
-  contentState: TextContent | ImageContent;
+  values: ValidContentValueTypes;
+  contentState: AnyContentType;
   updateContentValueState: (newContentValueState: any) => void;
 }) {
   const EditModalContentType = () => {
-    console.log(type, contentState, typeof contentState);
-    if (
-      type === "Text" &&
-      (typeof contentState === "string" || contentState === null)
-    ) {
+    // console.log(type, contentState, typeof contentState);
+    if (values.type === "Text") {
       return (
         <TextEdit
-          content={contentState}
+          content={values.content}
+          contentState={contentState}
           updateContentValueState={updateContentValueState}
         />
       );
-    } else if (type === "Image" && typeof contentState === "object") {
+    } else if (values.type === "Image") {
       return (
         <ImageEdit
-          content={contentState}
+          content={values.content}
           updateContentValueState={updateContentValueState}
         />
       );
-    } else if (type === "Video" && typeof contentState === "object") {
-      return <>video</>;
+    } else if (values.type === "Video") {
+      return (
+        <VideoEdit
+          content={values.content}
+          updateContentValueState={updateContentValueState}
+        />
+      );
     }
-    return <>null</>;
+    return (
+      <>
+        <p>{values.type}</p>
+        {JSON.stringify(values.content)}
+      </>
+    );
   };
   return (
     <>

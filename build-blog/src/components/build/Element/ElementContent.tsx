@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { BuildContext } from "../buildContext/BuildContext";
 import { ElementSelectionContext } from "../buildContext/ElementSelectorContext";
 import { fileSize } from "@/lib/utils";
+import { VideoElement } from "./elements/ElementVideo";
 
 export function ElementContent({
   type,
@@ -70,6 +71,15 @@ export function ElementContent({
           content={
             buildContext.getElementContent("state")[id]
               .content as ImagesFileObj | null
+          }
+        />
+      )}
+
+      {type === "Video" && (
+        <VideoElement
+          content={
+            buildContext.getElementContent("state")[id]
+              .content as VideoContent | null
           }
         />
       )}

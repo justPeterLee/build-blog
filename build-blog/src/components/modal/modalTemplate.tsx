@@ -72,7 +72,7 @@ export function Modal({
   );
 }
 
-function ModalPortal({
+export function ModalPortal({
   children,
   selector,
 }: {
@@ -88,4 +88,8 @@ function ModalPortal({
   }, [selector]);
 
   if (mounted && ref.current) return createPortal(children, ref.current);
+}
+
+function BackDrop() {
+  return;
 }

@@ -59,6 +59,28 @@ interface ImagesFileObj {
 interface ImagesFileOrderObj {
   [order: number]: ImageOrderedFile;
 }
+interface VideoFile {
+  file?: File;
+  embed?: string;
+  subtitle?: string;
+  reference?: string;
+}
 
 type TextContent = string | null;
 type ImageContent = ImagesFileObj | null;
+type VideoContent = VideoContentType | null;
+
+type AnyContentType = TextContent | ImageContent | VideoContent;
+
+interface VideoContentType {
+  mode: InputModes;
+  content: File | string | null;
+  subtitle: string;
+  reference: string;
+}
+
+type ValidContentValueTypes =
+  | { type: "Text"; content: TextContent }
+  | { type: "Image"; content: ImageContent }
+  | { type: "Video"; content: VideoContent }
+  | { type: "Other"; content: null };

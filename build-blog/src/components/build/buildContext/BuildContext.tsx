@@ -22,17 +22,11 @@ export interface ElementSpringObj {
 }
 
 export interface ElementContentObj {
-  [id: string]: {
-    type: "Text" | "Image" | "Video" | "Other";
-    content: TextContent | ImageContent | null;
-  };
+  [id: string]: ValidContentValueTypes;
 }
 
 interface BuildContextType {
-  addElement: (
-    type: "Text" | "Image" | "Video" | "Other",
-    insertIndex: number
-  ) => void;
+  addElement: (type: elementTypes, insertIndex: number) => void;
 
   deleteElement: (id: string) => void;
 
@@ -40,14 +34,11 @@ interface BuildContextType {
 
   getElementContent: (type: "ref" | "state") => ElementContentObj;
 
-  getElementValues: (id: string) => {
-    type: "Text" | "Image" | "Video" | "Other";
-    content: TextContent | ImageContent | null;
-  } | null;
+  getElementValues: (id: string) => ValidContentValueTypes | null;
 
   updateElementContent: (
     id: string,
-    content: TextContent | ImageContent
+    content: AnyContentType
   ) => {
     status: boolean;
     error: string;
@@ -195,10 +186,7 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
   /* add element 
       - drag and drop element selection on to viewport to add to element list
   */
-  const addElement = (
-    type: "Text" | "Image" | "Video" | "Other",
-    insertIndex: number
-  ) => {
+  const addElement = (type: elementTypes, insertIndex: number) => {
     // generate new unique id
     const uniqueId = nanoid(10);
     const elementId = uniqueId + "-" + type;
@@ -243,20 +231,14 @@ export function BuildContextProvider({ children }: { children: ReactNode }) {
 
   /* add element content
    */
-  const addElementContent = (
-    id: string,
-    type: "Text" | "Image" | "Video" | "Other"
-  ) => {
+  const addElementContent = (id: string, type: elementTypes) => {
     elementContentRef.current[id] = { type, content: null };
     setElementContentState(() => elementContentRef.current);
   };
 
   /* update element's content
    */
-  const updateElementContent = (
-    id: string,
-    content: TextContent | ImageContent | null
-  ) => {
+  const updateElementContent = (id: string, content: AnyContentType) => {
     try {
       // check to see element exists
       if (!elementContentRef.current[id])
